@@ -1,0 +1,29 @@
+html, body { 
+    width: 100%;
+}
+
+#palco {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+    overflow: hidden;
+    z-index: 1;
+}
+
+#airplane {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    display: block;
+    bottom: 5px;
+    left: 50%;
+    margin-left: -75px;
+    z-index: 9;
+    background-image: url('../images/airplanes/airplane-p40.png');
+    background-repeat: no-repeat;
+}
+
+#airplane .reto {
+    background-position: 0px 0px;
+}
