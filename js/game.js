@@ -1,10 +1,22 @@
 //recupera variáveis
+
+//tamanho do palco
 var palcoWidth = getDocWidth();
 var palcoHeight = getDocHeight();
-    
+
+//tamanho avião
+var airplaneWidth = $('#airplane').css('width');
+var airplaneHeight = $('#airplane').css('height');
+
+//movimentação
+//máximo movimentação avião
+var maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(75))-parseFloat(75));
+var maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(75))+parseFloat(75)));
+var movimentacao = parseFloat(75); //mover em pixel a cada interação
 var movendoAirplane = false;
 
-$(document).keyup(function(e){
+//funções para cada tecla do teclado
+$(document).keydown(function(e){
     
     //tecla esc
     if (e.keyCode == 27) {
@@ -33,6 +45,7 @@ $(document).keyup(function(e){
     
 });
 
+//width do body
 function getDocWidth(){
     var width = (
     'innerWidth' in window? window.innerWidth :
@@ -42,6 +55,7 @@ function getDocWidth(){
     return width;
 }
 
+//height do body
 function getDocHeight(){
     var height = (
     'innerHeight' in window? window.innerHeight :
@@ -51,20 +65,32 @@ function getDocHeight(){
     return height;
 }
 
+//movimentação avião para esquerda
 function esquerda(){
     if(movendoAirplane == false) {
-        movendoAirplane = true;
-        $('#airplane').animate({marginLeft:'-=150px'}, 200, function(){
-             movendoAirplane = false;
-        });
+        //testa se a próxima será maior ou igual a máxima
+        var marginAtual = $('#airplane').css('margin-left');
+        marginAtual = parseFloat(marginAtual.replace('px',''));
+        if((marginAtual-movimentacao) >= maxMovEsquerda){
+            movendoAirplane = true;
+            $('#airplane').animate({marginLeft:'-='+movimentacao+'px'}, 0, function(){
+                 movendoAirplane = false;
+            });
+        }
     }
 }
 
+//movimentação avião para direita
 function direita(){
     if(movendoAirplane == false) {
-        movendoAirplane = true;
-        $('#airplane').animate({marginLeft:'+=150px'}, 200, function(){
-             movendoAirplane = false;
-        });
+        //testa se a próxima será menor que a máxima
+        var marginAtual = $('#airplane').css('margin-left');
+        marginAtual = parseFloat(marginAtual.replace('px',''));
+        if((marginAtual+movimentacao) < maxMovDireita){
+            movendoAirplane = true;
+            $('#airplane').animate({marginLeft:'+='+movimentacao+'px'}, 0, function(){
+                 movendoAirplane = false;
+            });
+        }
     }
 }
