@@ -27,3 +27,17 @@ html, body {
 #airplane .reto {
     background-position: 0px 0px;
 }
+
+#objects {
+    position: absolute;
+    top: -1000%;
+    opacity: 0;
+}
+
+#objects img {
+    float: left;
+}
+
+.linha .object {
+    float: left;
+}
