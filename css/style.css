@@ -1,5 +1,6 @@
 html, body { 
     width: 100%;
+    overflow: hidden;
 }
 
 #palco {
@@ -7,8 +8,22 @@ html, body {
     width: 100%;
     height: 100%;
     display: block;
-    overflow: hidden;
     z-index: 1;
+}
+
+#palco #obstaculos {
+    position: absolute;
+    bottom: 100%;
+}
+
+#palco #obstaculos .linha {
+    width: 100%;
+    float: left;
+    margin-bottom: 400px;
+}
+
+#palco #obstaculos .linha .object {
+    float: left;
 }
 
 #airplane {
@@ -35,9 +50,5 @@ html, body {
 }
 
 #objects img {
-    float: left;
-}
-
-.linha .object {
     float: left;
 }

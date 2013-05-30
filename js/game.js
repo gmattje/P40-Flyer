@@ -7,20 +7,37 @@ var palcoHeight = getDocHeight();
 //tamanho avião
 var airplaneWidth = 0;
 var airplaneHeight = 0;
+var air_x1 = 0;
+var air_x2 = 0;
+var air_y1 = 0;
+var air_y2 = 0;
 
 //tamanho passagem avião
 var tamanhoPassagem = 0;
 
 //movimentação
 //máximo movimentação avião
-var maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(75))-parseFloat(75));
-var maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(75))+parseFloat(75)));
-var movimentacao = parseFloat(75); //mover em pixel a cada interação
+var maxMovDireita = 0;
+var maxMovEsquerda = 0;
+var movimentacao = parseFloat(50); //mover em pixel a cada interação
 var movendoAirplane = false;
 
 //objetos
 var objects = new Array();
 var objectsMaximos = new Array();
+var encontroX = false;
+var encontroY = false;
+
+//função de inicialização
+function init(){
+    dadosObjetos();
+    //calculando variáveis
+    airplaneWidth = $('#airplane').css('width').replace('px','');
+    airplaneHeight = $('#airplane').css('height').replace('px','');
+    tamanhoPassagem = parseFloat(airplaneWidth)+parseFloat(airplaneWidth*(50/100));
+    maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))-parseFloat(airplaneWidth/2));
+    maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))+parseFloat(airplaneWidth/2)));
+}
 
 //funções para cada tecla do teclado
 $(document).keydown(function(e){
@@ -32,7 +49,8 @@ $(document).keydown(function(e){
     
     //tecla cima
     if (e.keyCode == 38) {
-        return false;        
+        //return false;       
+        rolagemObstaculo();
     }
     
     //tecla baixo
@@ -96,8 +114,9 @@ function esquerda(){
             movendoAirplane = true;
             $('#airplane').animate({marginLeft:'-='+movimentacao+'px'}, 0, function(){
                  movendoAirplane = false;
+                 posicaoAbsolutaAirplane();
             });
-        }
+        }        
     }
 }
 
@@ -111,32 +130,45 @@ function direita(){
             movendoAirplane = true;
             $('#airplane').animate({marginLeft:'+='+movimentacao+'px'}, 0, function(){
                  movendoAirplane = false;
+                 posicaoAbsolutaAirplane();
             });
-        }
+        }        
     }
 }
 
-//criando linhas de obstáculos
-function criaLinhaObstaculos(){
-    
-    if(airplaneWidth == "" || airplaneHeight == ""){
-        airplaneWidth = $('#airplane').css('width').replace('px','');
-        airplaneHeight = $('#airplane').css('height').replace('px','');
-        tamanhoPassagem = parseFloat(airplaneWidth)+parseFloat(airplaneWidth*(25/100));
-    }        
+function posicaoAbsolutaAirplane(){
+    air_x1 = $('#airplane').offset().left;
+    air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
+    air_y1 = $('#airplane').offset().top;
+    air_y2 = parseFloat(air_y1)+parseFloat(airplaneHeight);
+    //alert("X: "+air_x1+" - "+air_x2+" e Y: "+air_y1+" - "+air_y2);
+}
+
+//criando linhas de obstáculos aleatórios
+function criaLinhaObstaculos(){       
     
     //cria elemento linha
-    var novaLinha = $('<div>').appendTo('body').addClass('linha');
+    var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha');
     
     //elementos
+    var primeiroElemento = true;
     var tamMax = palcoWidth;
-    for(var i=0;i<100;i++) {
+    while(tamMax > 0) {
         indexElemento = indexObstaculoAleatorio(tamMax);
-        $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',tamanhoPassagem);
-        tamMax = tamMax-objects[indexElemento];
-        if(tamMax <= 0) {
-            break;
-        }
+        
+        if(primeiroElemento == true) {
+            var inicioAletorio = Math.floor((Math.random()*(tamanhoPassagem+parseFloat(tamanhoPassagem*(25/100)))));
+            tamMax = tamMax-inicioAletorio-objects[indexElemento];
+            if(tamMax >= 0) {
+                $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
+            }
+            primeiroElemento = false;
+        } else {
+            tamMax = tamMax-tamanhoPassagem-objects[indexElemento];
+            if(tamMax >= 0) {
+                $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',tamanhoPassagem);
+            }
+        }        
     }
     
 }
@@ -153,4 +185,49 @@ function indexObstaculoAleatorio(tamanhoMaximo){
     var quantidadeObstaculos = objectsMaximos.length;
     var elementoAleatorio = Math.floor((Math.random()*quantidadeObstaculos));
     return objectsMaximos[elementoAleatorio];
+}
+
+//rolagem dos obstáculos
+function rolagemObstaculo(){
+    //criaLinhaObstaculos();
+    $('.linha').children('.object').each(function(){
+       encontroX = false;
+       encontroY = false;
+       var objWidth = $(this).css('width').replace('px','');
+       var objHeight = $(this).css('height').replace('px','');
+       var obj_x1 = $(this).children('img').offset().left; 
+       var obj_x2 = parseFloat(obj_x1)+parseFloat(objWidth);
+       var obj_y1 = $(this).children('img').offset().top; 
+       var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
+       if(objWidth >= airplaneWidth) {
+           if(air_x1 >= obj_x1 && air_x2 <= obj_x2){
+            encontroX = true;
+           }
+       }
+       if(objHeight < airplaneHeight) {
+           if(obj_y1 <= air_y1 && obj_y2 <= air_y2){
+            encontroY = true;    
+           }
+       }
+       if($(this).children('img').offset().top > palcoHeight) {
+           $(this).remove();
+       } 
+    });
+    if(encontroX && encontroY) {
+        gameOver();
+    }
+    $('#obstaculos').animate({bottom:'-=10%'}, 150, function(){
+        rolagemObstaculo();
+    });
+    //$('.object').each(function(){
+    //    if($(this).offset().top > palcoHeight) {
+    //        $(this).parent('.linha').remove();
+    //    }
+    //})
+}
+
+function gameOver(){
+    encontroX = false;
+    encontroY = false;
+    alert('game over');
 }
