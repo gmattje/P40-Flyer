@@ -35,6 +35,9 @@ function init(){
     airplaneWidth = $('#airplane').css('width').replace('px','');
     airplaneHeight = $('#airplane').css('height').replace('px','');
     air_x1 = $('#airplane').offset().left;
+    air_x2 = air_x1+parseFloat(airplaneWidth);
+    air_y1 = $('#airplane').offset().top;
+    air_y2 = air_y1+parseFloat(airplaneHeight);
     tamanhoPassagem = parseFloat(airplaneWidth)+parseFloat(airplaneWidth*(50/100));
     maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))-parseFloat(airplaneWidth/2));
     maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))+parseFloat(airplaneWidth/2)));
@@ -147,8 +150,8 @@ function posicaoAbsolutaAirplane(direcao){
         air_x1 = air_x1+movimentacao;
         air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
     }    
-    air_y1 = $('#airplane').offset().top;
-    air_y2 = parseFloat(air_y1)+parseFloat(airplaneHeight);
+    //air_y1 = $('#airplane').offset().top;
+    //air_y2 = parseFloat(air_y1)+parseFloat(airplaneHeight);
     //alert("X: "+air_x1+" - "+air_x2+" e Y: "+air_y1+" - "+air_y2);
 }
 
@@ -204,34 +207,49 @@ function rolagemObstaculo(){
        var obj_x2 = parseFloat(obj_x1)+parseFloat(objWidth);
        var obj_y1 = $(this).children('img').offset().top; 
        var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
-       if(obj_y1 >= air_y1) {
-            if((obj_x2 > air_x1) && (obj_x1 < air_x1) && (obj_y2 <= air_y2)) {
+       if(parseFloat(obj_y1) >= parseFloat(air_y1)) {
+            //caso 2 e 8
+            if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
                 gameOver($(this));
             }
-            if((obj_x2 > air_x2) && (obj_x1 < air_x2) && (obj_y2 <= air_y2)) {
+            //caso 4 e 9
+            if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
                 gameOver($(this));
             } 
-            if((obj_x2 > air_y2) && (obj_x1 < air_x1) && (obj_y2 > air_y2)) {
+            //caso 10
+            //if((parseFloat(obj_x2) > parseFloat(air_y2)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) > parseFloat(air_y2))) {
+            //    gameOver($(this));
+            //} 
+            //caso 11
+            if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) > parseFloat(air_y2))) {
                 gameOver($(this));
-            } 
-            if((obj_x2 > air_x2) && (obj_x1 < air_x1) && (obj_y2 > air_y2)) {
-                gameOver($(this));
-            } 
-            if((obj_x2 < air_x2) && (obj_x1 > air_x1) && (obj_y2 < air_y2)) {
+            }
+            //caso 12
+            if((parseFloat(obj_x2) < parseFloat(air_x2)) && (parseFloat(obj_x1) > parseFloat(air_x1)) && (parseFloat(obj_y2) < parseFloat(air_y2))) {
                 gameOver($(this));
             }
        }
-       if(obj_y1 > palcoHeight) {
+       if(parseFloat(obj_y1) > parseFloat(palcoHeight)) {
            $(this).remove();
-           //criaLinhaObstaculos();
+           criaLinhaObstaculos();
        } 
     });
-    $('#obstaculos').animate({bottom:'-=10%'}, 150, function(){
+    $('#obstaculos').animate({bottom:'-=10%'}, 200, function(){
         rolagemObstaculo();
     });
 }
 
 function gameOver(elemento){
+    
+    var objWidth = elemento.children('img').css('width').replace('px','');
+    var objHeight = elemento.children('img').css('height').replace('px','');
+    var obj_x1 = elemento.children('img').offset().left; 
+    var obj_x2 = parseFloat(obj_x1)+parseFloat(objWidth);
+    var obj_y1 = elemento.children('img').offset().top; 
+    var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
+    
     elemento.addClass('crash');
     alert('game over');
+    alert("X: "+obj_x1+" - "+obj_x2+" e Y: "+obj_y1+" - "+obj_y2);
+    alert("X: "+air_x1+" - "+air_x2+" e Y: "+air_y1+" - "+air_y2);
 }
