@@ -19,7 +19,7 @@ html, body {
 #palco #obstaculos .linha {
     width: 100%;
     float: left;
-    margin-bottom: 400px;
+    margin-bottom: 550px;
 }
 
 #palco #obstaculos .linha .object {

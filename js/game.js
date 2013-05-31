@@ -34,9 +34,12 @@ function init(){
     //calculando variáveis
     airplaneWidth = $('#airplane').css('width').replace('px','');
     airplaneHeight = $('#airplane').css('height').replace('px','');
+    air_x1 = $('#airplane').offset().left;
     tamanhoPassagem = parseFloat(airplaneWidth)+parseFloat(airplaneWidth*(50/100));
     maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))-parseFloat(airplaneWidth/2));
     maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))+parseFloat(airplaneWidth/2)));
+    //primeira linha de obstáculos
+    criaLinhaObstaculos();
 }
 
 //funções para cada tecla do teclado
@@ -114,7 +117,7 @@ function esquerda(){
             movendoAirplane = true;
             $('#airplane').animate({marginLeft:'-='+movimentacao+'px'}, 0, function(){
                  movendoAirplane = false;
-                 posicaoAbsolutaAirplane();
+                 posicaoAbsolutaAirplane(esquerda);
             });
         }        
     }
@@ -130,15 +133,20 @@ function direita(){
             movendoAirplane = true;
             $('#airplane').animate({marginLeft:'+='+movimentacao+'px'}, 0, function(){
                  movendoAirplane = false;
-                 posicaoAbsolutaAirplane();
+                 posicaoAbsolutaAirplane(direita);
             });
         }        
     }
 }
 
-function posicaoAbsolutaAirplane(){
-    air_x1 = $('#airplane').offset().left;
-    air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
+function posicaoAbsolutaAirplane(direcao){
+    if(direcao == esquerda) {
+        air_x1 = air_x1-movimentacao;
+        air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
+    } else if (direcao == direita) {
+        air_x1 = air_x1+movimentacao;
+        air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
+    }    
     air_y1 = $('#airplane').offset().top;
     air_y2 = parseFloat(air_y1)+parseFloat(airplaneHeight);
     //alert("X: "+air_x1+" - "+air_x2+" e Y: "+air_y1+" - "+air_y2);
@@ -189,45 +197,41 @@ function indexObstaculoAleatorio(tamanhoMaximo){
 
 //rolagem dos obstáculos
 function rolagemObstaculo(){
-    //criaLinhaObstaculos();
     $('.linha').children('.object').each(function(){
-       encontroX = false;
-       encontroY = false;
-       var objWidth = $(this).css('width').replace('px','');
-       var objHeight = $(this).css('height').replace('px','');
+       var objWidth = $(this).children('img').css('width').replace('px','');
+       var objHeight = $(this).children('img').css('height').replace('px','');
        var obj_x1 = $(this).children('img').offset().left; 
        var obj_x2 = parseFloat(obj_x1)+parseFloat(objWidth);
        var obj_y1 = $(this).children('img').offset().top; 
        var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
-       if(objWidth >= airplaneWidth) {
-           if(air_x1 >= obj_x1 && air_x2 <= obj_x2){
-            encontroX = true;
-           }
+       if(obj_y1 >= air_y1) {
+            if((obj_x2 > air_x1) && (obj_x1 < air_x1) && (obj_y2 <= air_y2)) {
+                gameOver($(this));
+            }
+            if((obj_x2 > air_x2) && (obj_x1 < air_x2) && (obj_y2 <= air_y2)) {
+                gameOver($(this));
+            } 
+            if((obj_x2 > air_y2) && (obj_x1 < air_x1) && (obj_y2 > air_y2)) {
+                gameOver($(this));
+            } 
+            if((obj_x2 > air_x2) && (obj_x1 < air_x1) && (obj_y2 > air_y2)) {
+                gameOver($(this));
+            } 
+            if((obj_x2 < air_x2) && (obj_x1 > air_x1) && (obj_y2 < air_y2)) {
+                gameOver($(this));
+            }
        }
-       if(objHeight < airplaneHeight) {
-           if(obj_y1 <= air_y1 && obj_y2 <= air_y2){
-            encontroY = true;    
-           }
-       }
-       if($(this).children('img').offset().top > palcoHeight) {
+       if(obj_y1 > palcoHeight) {
            $(this).remove();
+           //criaLinhaObstaculos();
        } 
     });
-    if(encontroX && encontroY) {
-        gameOver();
-    }
     $('#obstaculos').animate({bottom:'-=10%'}, 150, function(){
         rolagemObstaculo();
     });
-    //$('.object').each(function(){
-    //    if($(this).offset().top > palcoHeight) {
-    //        $(this).parent('.linha').remove();
-    //    }
-    //})
 }
 
-function gameOver(){
-    encontroX = false;
-    encontroY = false;
+function gameOver(elemento){
+    elemento.addClass('crash');
     alert('game over');
 }
