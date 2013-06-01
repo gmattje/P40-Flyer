@@ -28,6 +28,9 @@ var objectsMaximos = new Array();
 var encontroX = false;
 var encontroY = false;
 
+//colisoes
+var colisoes = 0;
+
 //função de inicialização
 function init(){
     dadosObjetos();
@@ -207,27 +210,25 @@ function rolagemObstaculo(){
        var obj_x2 = parseFloat(obj_x1)+parseFloat(objWidth);
        var obj_y1 = $(this).children('img').offset().top; 
        var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
-       if(parseFloat(obj_y1) >= parseFloat(air_y1)) {
-            //caso 2 e 8
+       if(parseFloat(obj_y2) > parseFloat(air_y1)) {
+            //caso batida na esquerda
             if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
-                gameOver($(this));
+                $(this).remove();
+                colisoes++;
             }
-            //caso 4 e 9
-            if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
-                gameOver($(this));
-            } 
-            //caso 10
-            //if((parseFloat(obj_x2) > parseFloat(air_y2)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) > parseFloat(air_y2))) {
-            //    gameOver($(this));
-            //} 
-            //caso 11
-            if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) > parseFloat(air_y2))) {
-                gameOver($(this));
+            //caso batida na direia
+            else if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
+                $(this).remove();
+                colisoes++;
             }
-            //caso 12
-            if((parseFloat(obj_x2) < parseFloat(air_x2)) && (parseFloat(obj_x1) > parseFloat(air_x1)) && (parseFloat(obj_y2) < parseFloat(air_y2))) {
-                gameOver($(this));
+            //caso batida em todo obstáculo
+            else if((parseFloat(obj_x2) < parseFloat(air_x2)) && (parseFloat(obj_x1) > parseFloat(air_x1)) && (parseFloat(obj_y2) < parseFloat(air_y2))) {
+                $(this).remove();
+                colisoes++;
             }
+       }
+       if(colisoes >= 5) {
+            gameOver();
        }
        if(parseFloat(obj_y1) > parseFloat(palcoHeight)) {
            $(this).remove();
@@ -239,17 +240,7 @@ function rolagemObstaculo(){
     });
 }
 
-function gameOver(elemento){
-    
-    var objWidth = elemento.children('img').css('width').replace('px','');
-    var objHeight = elemento.children('img').css('height').replace('px','');
-    var obj_x1 = elemento.children('img').offset().left; 
-    var obj_x2 = parseFloat(obj_x1)+parseFloat(objWidth);
-    var obj_y1 = elemento.children('img').offset().top; 
-    var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
-    
-    elemento.addClass('crash');
+function gameOver(){    
     alert('game over');
-    alert("X: "+obj_x1+" - "+obj_x2+" e Y: "+obj_y1+" - "+obj_y2);
-    alert("X: "+air_x1+" - "+air_x2+" e Y: "+air_y1+" - "+air_y2);
+    colisoes = 0;
 }
