@@ -9,21 +9,25 @@
         <script type="text/javascript" src="js/game.js"></script>
     </head>
     <body>
+        <div id="pontos">0 Pontos</div>
+        <div id="vidas"></div>
         <div id="palco">
             <div id="obstaculos"></div>
         </div>
         <div id="airplane" class="reto"></div>
         <div id="objects">
             <div id="obj0" class="object"><img src="images/obstacles/Ob-0.png"/></div>
-            <div id="obj1" class="object"><img src="images/obstacles/Ob-1.png"/></div>
-            <div id="obj2" class="object"><img src="images/obstacles/Ob-2.png"/></div>
-            <div id="obj3" class="object"><img src="images/obstacles/Ob-2.png" width="50" height="50"/></div>
+            <div id="obj1" class="object"><img src="images/obstacles/Ob-0.png" width="100" height="90"/></div>
+            <div id="obj2" class="object"><img src="images/obstacles/Ob-1.png"/></div>
+            <div id="obj3" class="object"><img src="images/obstacles/Ob-1.png" width="40" height="40"/></div>
+            <div id="obj4" class="object"><img src="images/obstacles/Ob-2.png"/></div>
+            <div id="obj5" class="object"><img src="images/obstacles/Ob-2.png" width="50" height="50"/></div>
         </div>
     </body>
     
     <script>
         $(window).load(function(){
-            init();
+            init(5, 200);
         });
     </script>
 </html>

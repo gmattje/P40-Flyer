@@ -3,6 +3,19 @@ html, body {
     overflow: hidden;
 }
 
+#vidas .vida {
+    width: 16px;
+    height: 15px;
+    display: block;
+    float: left;
+    background-image: url('../images/interface/heart.png');
+    background-repeat: no-repeat;
+}
+
+#vidas .off {
+    background-position: -16px 0px;
+}
+
 #palco {
     position: absolute;
     width: 100%;
@@ -22,9 +35,17 @@ html, body {
     margin-bottom: 550px;
 }
 
-#palco #obstaculos .linha .object {
-    float: left;
-    height: 100%;
+#palco #obstaculos .linha .object, #palco #obstaculos .linha .crash {
+    float: left;    
+}
+
+#palco #obstaculos .linha .crash {
+    background-image: url('../images/obstacles/crashed.jpg');
+    background-size: 100% 100%;
+}
+
+#palco #obstaculos .linha .crash img {
+    visibility: hidden;
 }
 
 #airplane {

@@ -21,6 +21,7 @@ var maxMovDireita = 0;
 var maxMovEsquerda = 0;
 var movimentacao = parseFloat(50); //mover em pixel a cada interação
 var movendoAirplane = false;
+var velocidade = 0;
 
 //objetos
 var objects = new Array();
@@ -31,21 +32,38 @@ var encontroY = false;
 //colisoes
 var colisoes = 0;
 
+//vidas
+var vidas = 0;
+
+//pontuacao
+var pontos = 0;
+
 //função de inicialização
-function init(){
+function init(qtdVidas, valorVelocidade){
+    //setando vidas
+    vidas = qtdVidas;
+    for(var i=1;i<=vidas;i++){
+        $('<div>').prependTo('#vidas').addClass('vida').attr('id','vida_'+i);
+    }
+    //setando velocidade
+    velocidade = valorVelocidade;
+    //recupera dados dos possíveis obstáculos
     dadosObjetos();
-    //calculando variáveis
-    airplaneWidth = $('#airplane').css('width').replace('px','');
-    airplaneHeight = $('#airplane').css('height').replace('px','');
-    air_x1 = $('#airplane').offset().left;
-    air_x2 = air_x1+parseFloat(airplaneWidth);
-    air_y1 = $('#airplane').offset().top;
-    air_y2 = air_y1+parseFloat(airplaneHeight);
-    tamanhoPassagem = parseFloat(airplaneWidth)+parseFloat(airplaneWidth*(50/100));
-    maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))-parseFloat(airplaneWidth/2));
-    maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))+parseFloat(airplaneWidth/2)));
+    //calculando dados do avião
+    dadosAviao();
     //primeira linha de obstáculos
-    criaLinhaObstaculos();
+    criaLinhaObstaculos(3);
+}
+
+function play(){
+    //potuação
+    setInterval('pontuacao(5)', ((velocidade*10)/4));
+    //cria linha obstaculos
+    setInterval('criaLinhaObstaculos(1)', (velocidade*10));    
+    //rolagem obstaculos
+    setInterval('rolagemObstaculos()', velocidade);
+    //controle colisao
+    setInterval('controleColisao()', velocidade);
 }
 
 //funções para cada tecla do teclado
@@ -59,7 +77,7 @@ $(document).keydown(function(e){
     //tecla cima
     if (e.keyCode == 38) {
         //return false;       
-        rolagemObstaculo();
+        play();
     }
     
     //tecla baixo
@@ -113,6 +131,19 @@ function dadosObjetos(){
     //});
 }
 
+//dados sobre avião
+function dadosAviao(){
+    airplaneWidth = $('#airplane').css('width').replace('px','');
+    airplaneHeight = $('#airplane').css('height').replace('px','');
+    air_x1 = $('#airplane').offset().left;
+    air_x2 = air_x1+parseFloat(airplaneWidth);
+    air_y1 = $('#airplane').offset().top;
+    air_y2 = air_y1+parseFloat(airplaneHeight);
+    tamanhoPassagem = parseFloat(airplaneWidth)+parseFloat(airplaneWidth*(50/100));
+    maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))-parseFloat(airplaneWidth/2));
+    maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))+parseFloat(airplaneWidth/2)));
+}
+
 //movimentação avião para esquerda
 function esquerda(){
     if(movendoAirplane == false) {
@@ -155,34 +186,38 @@ function posicaoAbsolutaAirplane(direcao){
     }    
     //air_y1 = $('#airplane').offset().top;
     //air_y2 = parseFloat(air_y1)+parseFloat(airplaneHeight);
-    //alert("X: "+air_x1+" - "+air_x2+" e Y: "+air_y1+" - "+air_y2);
 }
 
 //criando linhas de obstáculos aleatórios
-function criaLinhaObstaculos(){       
+function criaLinhaObstaculos(quantidade){       
     
-    //cria elemento linha
-    var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha');
+    //cria quantas linhas foram solicitadas
+    for(var i=0; i<quantidade; i++) {
     
-    //elementos
-    var primeiroElemento = true;
-    var tamMax = palcoWidth;
-    while(tamMax > 0) {
-        indexElemento = indexObstaculoAleatorio(tamMax);
-        
-        if(primeiroElemento == true) {
-            var inicioAletorio = Math.floor((Math.random()*(tamanhoPassagem+parseFloat(tamanhoPassagem*(25/100)))));
-            tamMax = tamMax-inicioAletorio-objects[indexElemento];
-            if(tamMax >= 0) {
-                $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
-            }
-            primeiroElemento = false;
-        } else {
-            tamMax = tamMax-tamanhoPassagem-objects[indexElemento];
-            if(tamMax >= 0) {
-                $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',tamanhoPassagem);
-            }
-        }        
+        //cria elemento linha
+        var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha');
+
+        //elementos
+        var primeiroElemento = true;
+        var tamMax = palcoWidth;
+        while(tamMax > 0) {
+            indexElemento = indexObstaculoAleatorio(tamMax);
+
+            if(primeiroElemento == true) {
+                var inicioAletorio = Math.floor((Math.random()*(tamanhoPassagem+parseFloat(tamanhoPassagem*(25/100)))));
+                tamMax = tamMax-inicioAletorio-objects[indexElemento];
+                if(tamMax >= 0) {
+                    $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
+                }
+                primeiroElemento = false;
+            } else {
+                tamMax = tamMax-tamanhoPassagem-objects[indexElemento];
+                if(tamMax >= 0) {
+                    $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',tamanhoPassagem);
+                }
+            }        
+        }
+    
     }
     
 }
@@ -202,45 +237,77 @@ function indexObstaculoAleatorio(tamanhoMaximo){
 }
 
 //rolagem dos obstáculos
-function rolagemObstaculo(){
-    $('.linha').children('.object').each(function(){
-       var objWidth = $(this).children('img').css('width').replace('px','');
-       var objHeight = $(this).children('img').css('height').replace('px','');
-       var obj_x1 = $(this).children('img').offset().left; 
-       var obj_x2 = parseFloat(obj_x1)+parseFloat(objWidth);
-       var obj_y1 = $(this).children('img').offset().top; 
-       var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
-       if(parseFloat(obj_y2) > parseFloat(air_y1)) {
-            //caso batida na esquerda
-            if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
-                $(this).remove();
-                colisoes++;
-            }
-            //caso batida na direia
-            else if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
-                $(this).remove();
-                colisoes++;
-            }
-            //caso batida em todo obstáculo
-            else if((parseFloat(obj_x2) < parseFloat(air_x2)) && (parseFloat(obj_x1) > parseFloat(air_x1)) && (parseFloat(obj_y2) < parseFloat(air_y2))) {
-                $(this).remove();
-                colisoes++;
-            }
-       }
-       if(colisoes >= 5) {
+function rolagemObstaculos(){
+    $('#obstaculos').animate({bottom:'-=10%'}, velocidade);
+}
+
+function controleColisao(){
+    $('.linha').each(function(){
+        if($(this).offset().top >= 0 && $(this).offset().top < palcoHeight) {
+            $(this).children('.object').each(function(){
+                var objWidth = $(this).children('img').css('width').replace('px','');
+                var objHeight = $(this).children('img').css('height').replace('px','');
+                var obj_x1 = $(this).children('img').offset().left; 
+                var obj_x2 = parseFloat(obj_x1)+parseFloat(objWidth);
+                var obj_y1 = $(this).children('img').offset().top; 
+                var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
+                if($(this).attr('class') != "crash") {
+                if(parseFloat(obj_y2) > parseFloat(air_y1)) {
+                    //caso batida na esquerda
+                    if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
+                        colidiu($(this));                
+                    }
+                    //caso batida toda esquerda
+                    else if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y1) > parseFloat(air_y1))) {
+                        colidiu($(this));                
+                    }
+                    //caso batida na direia
+                    else if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
+                        colidiu($(this)); 
+                    }
+                    //caso batida toda direita
+                    else if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y1) > parseFloat(air_y1))) {
+                        colidiu($(this));                
+                    }
+                    //caso batida em todo obstáculo
+                    else if((parseFloat(obj_x2) < parseFloat(air_x2)) && (parseFloat(obj_x1) > parseFloat(air_x1)) && (parseFloat(obj_y2) < parseFloat(air_y2))) {
+                        colidiu($(this)); 
+                    }
+                }
+                }
+                if(parseFloat(obj_y1) > parseFloat(palcoHeight)) {
+                    
+                } 
+            }); 
+        }
+    })
+     
+}
+
+function colidiu(elemento){
+    //confere novamente se objato já não tinha sido atingido
+    if(elemento.attr('class') != "crash") {
+        colisoes++;
+        elemento.removeClass('object').addClass('crash');         
+        $('#vida_'+colisoes).addClass('off');
+        pontuacao(-20);        
+        if(colisoes >= vidas) {
             gameOver();
-       }
-       if(parseFloat(obj_y1) > parseFloat(palcoHeight)) {
-           $(this).remove();
-           criaLinhaObstaculos();
-       } 
-    });
-    $('#obstaculos').animate({bottom:'-=10%'}, 200, function(){
-        rolagemObstaculo();
-    });
+        }
+    }      
+}
+
+function pontuacao(valor){
+    pontos = pontos + valor;
+    exibePontuacao();
+}
+
+function exibePontuacao(){
+    $('#pontos').html(pontos+" Pontos");
 }
 
 function gameOver(){    
-    alert('game over');
+    alert('GAME OVER - Você fez '+pontos+' pontos.');
     colisoes = 0;
+    pontos = 0;
 }
