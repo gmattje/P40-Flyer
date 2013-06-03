@@ -207,13 +207,13 @@ function criaLinhaObstaculos(quantidade){
                 var inicioAletorio = Math.floor((Math.random()*(tamanhoPassagem+parseFloat(tamanhoPassagem*(25/100)))));
                 tamMax = tamMax-inicioAletorio-objects[indexElemento];
                 if(tamMax >= 0) {
-                    $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
+                    $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',inicioAletorio).removeClass('crash').addClass('object');
                 }
                 primeiroElemento = false;
             } else {
                 tamMax = tamMax-tamanhoPassagem-objects[indexElemento];
                 if(tamMax >= 0) {
-                    $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',tamanhoPassagem);
+                    $('#obj'+indexElemento).clone().appendTo(novaLinha).css('margin-left',tamanhoPassagem).removeClass('crash').addClass('object');
                 }
             }        
         }
@@ -299,7 +299,24 @@ function colidiu(elemento){
 
 function pontuacao(valor){
     pontos = pontos + valor;
+    if(pontos < 0) {
+        pontos = 0;
+    }
     exibePontuacao();
+    //se perdeu pontos
+    if(valor < 0) {
+        exibePontuacaoNegativa(valor);
+    }
+}
+
+function exibePontuacaoNegativa(valor){
+    if(valor < 0) {
+        var perdeuPonto = $('<div>').appendTo('#palco').addClass('pontoNegativo').html(valor);
+        perdeuPonto.css('bottom','0px');
+        perdeuPonto.animate({bottom:palcoHeight}, 2000, function(){
+            perdeuPonto.remove();
+        });
+    }
 }
 
 function exibePontuacao(){

@@ -74,3 +74,11 @@ html, body {
 #objects img {
     float: left;
 }
+
+#palco .pontoNegativo {
+    position: absolute;
+    z-index: 9;
+    color: red;
+    right: 30px;
+    bottom: -100%;
+}
