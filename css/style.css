@@ -48,21 +48,58 @@ html, body {
     visibility: hidden;
 }
 
-#airplane {
+#airplaneContent {
     position: absolute;
-    width: 150px;
+    width: auto;
     height: 150px;
     display: block;
     bottom: 5px;
     left: 50%;
     margin-left: -75px;
-    z-index: 9;
-    background-image: url('../images/airplanes/airplane-p40.png');
-    background-repeat: no-repeat;
+    z-index: 9;    
 }
 
-#airplane .reto {
+#airplaneContent #airplane {
+    position: absolute;
+    height: 150px;
+    display: block;
+    background-image: url('../images/airplanes/airplane-p40.png');
+    background-repeat: no-repeat;
+    z-index: 9;
+}
+
+#airplaneContent.frente #airplane {
+    width: 150px;
     background-position: 0px 0px;
+}
+
+#airplaneContent.esquerda #airplane {
+   width: 117px;
+   background-position: -267px 0px; 
+}
+
+#airplaneContent.direita #airplane {
+    width: 117px;
+    background-position: -150px 0px;
+}
+
+#airplaneContent #airplaneFire {
+    position: absolute;
+    height: 150px;
+    display: block;
+    background-image: url('../images/airplanes/airplane-p40-fire.gif');
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    z-index: 8;
+    display: none;
+}
+
+#airplaneContent.frente #airplaneFire {
+    width: 150px;
+}
+
+#airplaneContent.esquerda #airplaneFire, #airplaneContent.direita #airplaneFire {
+   width: 117px; 
 }
 
 #objects {
@@ -79,6 +116,7 @@ html, body {
     position: absolute;
     z-index: 9;
     color: red;
+    font-size: 30pt;
     right: 30px;
     bottom: -100%;
 }

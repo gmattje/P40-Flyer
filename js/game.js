@@ -17,11 +17,30 @@ var tamanhoPassagem = 0;
 
 //movimentação
 //máximo movimentação avião
+var deslocamento = 'frente';
 var maxMovDireita = 0;
 var maxMovEsquerda = 0;
-var movimentacao = parseFloat(50); //mover em pixel a cada interação
+var movimentacao = 0; //mover em pixel a cada interação
+var velocidadeMovimentacao = 0;
 var movendoAirplane = false;
 var velocidade = 0;
+var modeloAviao = 'P-40';
+
+//avião P-40
+switch (modeloAviao){
+    case 'P-40':
+    movimentacao = parseFloat(15);
+    velocidadeMovimentacao = parseFloat(20);
+    break;
+    case 'Boing':
+    movimentacao = parseFloat(5); 
+    velocidadeMovimentacao = parseFloat(20);
+    break;
+    case 'Caça':
+    movimentacao = parseFloat(10); 
+    velocidadeMovimentacao = parseFloat(10);
+    break;
+}
 
 //objetos
 var objects = new Array();
@@ -76,24 +95,30 @@ $(document).keydown(function(e){
     
     //tecla cima
     if (e.keyCode == 38) {
-        //return false;       
-        play();
+        frente();
     }
     
     //tecla baixo
     if (e.keyCode == 40) {
-        //return false;
-        criaLinhaObstaculos();
+        play();
     }
     
     //tecla esquerda
     if (e.keyCode == 37) {
-        esquerda();
+        if(deslocamento == 'direita') {
+            frente();
+        } else {
+            esquerda();
+        }
     }
     
     //tecla direita
     if (e.keyCode == 39) {
-        direita();
+        if(deslocamento == 'esquerda') {
+            frente();
+        } else {
+            direita();
+        }
     }   
     
 });
@@ -126,9 +151,6 @@ function dadosObjetos(){
         objects[numObjects] = tamanhoObject;
         numObjects++; 
     });
-    //$.each(objects, function(index, value) {
-    //    alert(index+" = "+value);
-    //});
 }
 
 //dados sobre avião
@@ -145,45 +167,113 @@ function dadosAviao(){
 }
 
 //movimentação avião para esquerda
+//function esquerda(){
+//    if(movendoAirplane == false) {
+//        //testa se a próxima será maior ou igual a máxima
+//        var marginAtual = $('#airplane').css('margin-left');
+//        marginAtual = parseFloat(marginAtual.replace('px',''));
+//        if((marginAtual-movimentacao) >= maxMovEsquerda){
+//            movendoAirplane = true;
+//            $('#airplane').animate({marginLeft:'-='+movimentacao+'px'}, 0, function(){
+//                 movendoAirplane = false;
+//                 posicaoAbsolutaAirplane(esquerda);
+//            });
+//        }        
+//    }
+//}
+
 function esquerda(){
+    deslocamento = 'esquerda';
+    $('#airplaneContent').removeClass('frente').addClass('esquerda');
+    deslocaEsquerda();
+}
+
+function deslocaEsquerda(){
     if(movendoAirplane == false) {
-        //testa se a próxima será maior ou igual a máxima
-        var marginAtual = $('#airplane').css('margin-left');
-        marginAtual = parseFloat(marginAtual.replace('px',''));
-        if((marginAtual-movimentacao) >= maxMovEsquerda){
-            movendoAirplane = true;
-            $('#airplane').animate({marginLeft:'-='+movimentacao+'px'}, 0, function(){
-                 movendoAirplane = false;
-                 posicaoAbsolutaAirplane(esquerda);
-            });
-        }        
+        if(deslocamento == 'esquerda') {
+            //testa se a próxima será maior ou igual a máxima
+            var marginAtual = $('#airplane').css('margin-left');
+            marginAtual = parseFloat(marginAtual.replace('px',''));
+            if((marginAtual-movimentacao) >= maxMovEsquerda){
+                movendoAirplane = true;
+                $('#airplaneContent').animate({marginLeft:'-='+movimentacao+'px'}, velocidadeMovimentacao, function(){
+                     movendoAirplane = false;
+                     deslocaEsquerda();
+                     posicaoAbsolutaAirplane();
+                });
+            } else {
+                frente();
+            }
+        } else {
+            return false;
+        }
     }
 }
 
 //movimentação avião para direita
+//function direita(){
+//    if(movendoAirplane == false) {
+//        //testa se a próxima será menor que a máxima
+//        var marginAtual = $('#airplane').css('margin-left');
+//        marginAtual = parseFloat(marginAtual.replace('px',''));
+//        if((marginAtual+movimentacao) < maxMovDireita){
+//            movendoAirplane = true;
+//            $('#airplane').animate({marginLeft:'+='+movimentacao+'px'}, 0, function(){
+//                 movendoAirplane = false;
+//                 posicaoAbsolutaAirplane(direita);
+//            });
+//        }        
+//    }
+//}
+
 function direita(){
+    deslocamento = 'direita';
+    $('#airplaneContent').removeClass('frente').addClass('direita');
+    deslocaDireita();
+}
+
+function deslocaDireita(){
     if(movendoAirplane == false) {
-        //testa se a próxima será menor que a máxima
-        var marginAtual = $('#airplane').css('margin-left');
-        marginAtual = parseFloat(marginAtual.replace('px',''));
-        if((marginAtual+movimentacao) < maxMovDireita){
-            movendoAirplane = true;
-            $('#airplane').animate({marginLeft:'+='+movimentacao+'px'}, 0, function(){
-                 movendoAirplane = false;
-                 posicaoAbsolutaAirplane(direita);
-            });
-        }        
+        if(deslocamento == 'direita') {
+            //testa se a próxima será menor que a máxima
+            var marginAtual = $('#airplane').css('margin-left');
+            marginAtual = parseFloat(marginAtual.replace('px',''));
+            if((marginAtual+movimentacao) < maxMovDireita){
+                movendoAirplane = true;
+                $('#airplaneContent').animate({marginLeft:'+='+movimentacao+'px'}, velocidadeMovimentacao, function(){
+                     movendoAirplane = false;
+                     deslocaDireita();
+                     posicaoAbsolutaAirplane();
+                });
+            } else {
+                frente();
+            }
+        } else {
+            return false;
+        }
     }
 }
 
-function posicaoAbsolutaAirplane(direcao){
-    if(direcao == esquerda) {
-        air_x1 = air_x1-movimentacao;
-        air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
-    } else if (direcao == direita) {
-        air_x1 = air_x1+movimentacao;
-        air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
-    }    
+function frente(){
+    deslocamento = 'frente';
+    $('#airplaneContent').removeClass('esquerda').removeClass('direita').addClass('frente');
+}
+
+//function posicaoAbsolutaAirplane(direcao){
+//    if(direcao == esquerda) {
+//        air_x1 = air_x1-movimentacao;
+//        air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
+//    } else if (direcao == direita) {
+//        air_x1 = air_x1+movimentacao;
+//        air_x2 = parseFloat(air_x1)+parseFloat(airplaneWidth);
+//    }    
+//    //air_y1 = $('#airplane').offset().top;
+//    //air_y2 = parseFloat(air_y1)+parseFloat(airplaneHeight);
+//}
+
+function posicaoAbsolutaAirplane(){
+    air_x1 = $('#airplaneContent').offset().left;
+    air_x2 = parseFloat(air_x1)+parseFloat($('#airplaneContent').css('width').replace('px',''));    
     //air_y1 = $('#airplane').offset().top;
     //air_y2 = parseFloat(air_y1)+parseFloat(airplaneHeight);
 }
@@ -290,7 +380,12 @@ function colidiu(elemento){
         colisoes++;
         elemento.removeClass('object').addClass('crash');         
         $('#vida_'+colisoes).addClass('off');
-        pontuacao(-20);        
+        pontuacao(-20); 
+        if(vidas-colisoes <= 2) {
+            $('#airplaneContent #airplaneFire').css("display","block");
+        } else {
+            $('#airplaneContent #airplaneFire').css("display","none");
+        }
         if(colisoes >= vidas) {
             gameOver();
         }
