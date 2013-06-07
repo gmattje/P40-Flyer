@@ -192,7 +192,7 @@ function deslocaEsquerda(){
     if(movendoAirplane == false) {
         if(deslocamento == 'esquerda') {
             //testa se a próxima será maior ou igual a máxima
-            var marginAtual = $('#airplane').css('margin-left');
+            var marginAtual = $('#airplaneContent').css('margin-left');
             marginAtual = parseFloat(marginAtual.replace('px',''));
             if((marginAtual-movimentacao) >= maxMovEsquerda){
                 movendoAirplane = true;
@@ -236,7 +236,7 @@ function deslocaDireita(){
     if(movendoAirplane == false) {
         if(deslocamento == 'direita') {
             //testa se a próxima será menor que a máxima
-            var marginAtual = $('#airplane').css('margin-left');
+            var marginAtual = $('#airplaneContent').css('margin-left');
             marginAtual = parseFloat(marginAtual.replace('px',''));
             if((marginAtual+movimentacao) < maxMovDireita){
                 movendoAirplane = true;
@@ -272,8 +272,8 @@ function frente(){
 //}
 
 function posicaoAbsolutaAirplane(){
-    air_x1 = $('#airplaneContent').offset().left;
-    air_x2 = parseFloat(air_x1)+parseFloat($('#airplaneContent').css('width').replace('px',''));    
+    air_x1 = $('#airplane').offset().left;
+    air_x2 = parseFloat(air_x1)+parseFloat($('#airplane').css('width').replace('px',''));    
     //air_y1 = $('#airplane').offset().top;
     //air_y2 = parseFloat(air_y1)+parseFloat(airplaneHeight);
 }
