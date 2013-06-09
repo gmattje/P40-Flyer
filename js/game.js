@@ -57,6 +57,9 @@ var vidas = 0;
 //pontuacao
 var pontos = 0;
 
+//se jogo está rolando
+var varPlay = false;
+
 //função de inicialização
 function init(qtdVidas, valorVelocidade){
     //setando vidas
@@ -75,22 +78,44 @@ function init(qtdVidas, valorVelocidade){
 }
 
 function play(){
-    //potuação
-    setInterval('pontuacao(5)', ((velocidade*10)/4));
-    //cria linha obstaculos
-    setInterval('criaLinhaObstaculos(1)', (velocidade*10));    
-    //rolagem obstaculos
-    setInterval('rolagemObstaculos()', velocidade);
-    //controle colisao
-    setInterval('controleColisao()', velocidade);
+    if(varPlay == false) {
+        varPlay = true;
+        $('#panelPause').css('display','none');
+        //potuação
+        timerPontuacao = setInterval('pontuacao(5)', ((velocidade*10)/4));
+        //cria linha obstaculos
+        timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*10));    
+        //rolagem obstaculos
+        timerRolaObstaculos = setInterval('rolagemObstaculos()', velocidade);
+        //controle colisao
+        timerControleColisao = setInterval('controleColisao()', velocidade);
+    }
+}
+
+function pause(){
+    if(varPlay == true) {
+        varPlay = false;
+        $('#panelPause').css('display','block');
+        clearInterval(timerPontuacao);
+        clearInterval(timerCriaObstaculos);
+        clearInterval(timerRolaObstaculos);
+        clearInterval(timerControleColisao);        
+    }
 }
 
 //funções para cada tecla do teclado
 $(document).keydown(function(e){
     
+    //tecla r - restart
+    if(e.keyCode == 82) {
+        if(confirm('Deseja realmente reiniciar?')) {
+            window.location.reload(true);
+        }
+    }
+    
     //tecla esc
     if (e.keyCode == 27) {
-        alert('esc');
+        pause();
     }
     
     //tecla cima
@@ -183,13 +208,15 @@ function dadosAviao(){
 //}
 
 function esquerda(){
-    deslocamento = 'esquerda';
-    $('#airplaneContent').removeClass('frente').addClass('esquerda');
-    deslocaEsquerda();
+    if(varPlay == true){
+        deslocamento = 'esquerda';
+        $('#airplaneContent').removeClass('frente').addClass('esquerda');
+        deslocaEsquerda();
+    }
 }
 
 function deslocaEsquerda(){
-    if(movendoAirplane == false) {
+    if(varPlay == true && movendoAirplane == false) {
         if(deslocamento == 'esquerda') {
             //testa se a próxima será maior ou igual a máxima
             var marginAtual = $('#airplaneContent').css('margin-left');
@@ -227,13 +254,15 @@ function deslocaEsquerda(){
 //}
 
 function direita(){
-    deslocamento = 'direita';
-    $('#airplaneContent').removeClass('frente').addClass('direita');
-    deslocaDireita();
+    if(varPlay == true){
+        deslocamento = 'direita';
+        $('#airplaneContent').removeClass('frente').addClass('direita');
+        deslocaDireita();
+    }
 }
 
 function deslocaDireita(){
-    if(movendoAirplane == false) {
+    if(varPlay == true && movendoAirplane == false) {
         if(deslocamento == 'direita') {
             //testa se a próxima será menor que a máxima
             var marginAtual = $('#airplaneContent').css('margin-left');
@@ -255,8 +284,10 @@ function deslocaDireita(){
 }
 
 function frente(){
-    deslocamento = 'frente';
-    $('#airplaneContent').removeClass('esquerda').removeClass('direita').addClass('frente');
+    if(varPlay == true){
+        deslocamento = 'frente';
+        $('#airplaneContent').removeClass('esquerda').removeClass('direita').addClass('frente');
+    }
 }
 
 //function posicaoAbsolutaAirplane(direcao){
