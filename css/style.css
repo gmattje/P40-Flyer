@@ -16,17 +16,29 @@ html, body {
     background-position: -16px 0px;
 }
 
+#infos {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    display: block;
+    top: 0px;
+    left: 0px;
+    z-index: 9;    
+}
+
 #palco {
     position: absolute;
     width: 100%;
     height: 100%;
     display: block;
-    z-index: 1;
+    z-index: 1;    
 }
 
 #palco #obstaculos {
     position: absolute;
-    bottom: 100%;
+    bottom: 0px;
+    padding-bottom: 100%;
+    background-image: url('../images/patterns/snow.jpg');
 }
 
 #palco #obstaculos .linha {

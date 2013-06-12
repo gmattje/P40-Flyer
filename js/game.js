@@ -103,14 +103,18 @@ function pause(){
     }
 }
 
+function restart(){
+    if(confirm('Deseja realmente reiniciar?')) {
+        window.location.reload(true);
+    }
+}
+
 //funções para cada tecla do teclado
 $(document).keydown(function(e){
     
     //tecla r - restart
     if(e.keyCode == 82) {
-        if(confirm('Deseja realmente reiniciar?')) {
-            window.location.reload(true);
-        }
+        restart();
     }
     
     //tecla esc
@@ -340,6 +344,8 @@ function criaLinhaObstaculos(quantidade){
         }
     
     }
+    
+    $('#obstaculos').children('<div>:last').remove();
     
 }
 
