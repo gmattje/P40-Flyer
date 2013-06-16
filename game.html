@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="css/normalize.css" type="text/css"/>
         <link rel="stylesheet" href="css/style.css" type="text/css"/>
         <script type="text/javascript" src="js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="js/jquery.queryloader2.js"></script>
         <script type="text/javascript" src="js/game.js"></script>
     </head>
     <body>
@@ -36,8 +37,10 @@
     </body>
     
     <script>
-        $(window).load(function(){
-            init(5, 200);
+        $(document).ready(function (){
+            $("body").queryLoader2({barHeight: '5', percentage: true, onComplete: function(){
+                init(6, 200);        
+            }});
         });
     </script>
 </html>

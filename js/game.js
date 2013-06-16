@@ -422,11 +422,14 @@ function colidiu(elemento){
         elemento.removeClass('object').addClass('crash');         
         $('#vida_'+colisoes).addClass('off');
         pontuacao(-20); 
-        if(vidas-colisoes <= 2) {
+        if(vidas-colisoes <= 3) {
             $('#airplaneContent #airplaneSmoke').css("display","block");
-            $('#airplaneContent #airplaneFire').css("display","block");
         } else {
             $('#airplaneContent #airplaneSmoke').css("display","none");
+        }
+        if(vidas-colisoes <= 2) {
+            $('#airplaneContent #airplaneFire').css("display","block");
+        } else {
             $('#airplaneContent #airplaneFire').css("display","none");
         }
         if(colisoes >= vidas) {
