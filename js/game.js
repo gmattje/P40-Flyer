@@ -103,8 +103,12 @@ function pause(){
     }
 }
 
-function restart(){
-    if(confirm('Deseja realmente reiniciar?')) {
+function restart(confirmacao){
+    if(confirmacao == true) {
+        if(confirm('Deseja realmente reiniciar?')) {
+            window.location.reload(true);
+        }
+    } else {
         window.location.reload(true);
     }
 }
@@ -114,7 +118,7 @@ $(document).keydown(function(e){
     
     //tecla r - restart
     if(e.keyCode == 82) {
-        restart();
+        restart(true);
     }
     
     //tecla esc
@@ -419,8 +423,10 @@ function colidiu(elemento){
         $('#vida_'+colisoes).addClass('off');
         pontuacao(-20); 
         if(vidas-colisoes <= 2) {
+            $('#airplaneContent #airplaneSmoke').css("display","block");
             $('#airplaneContent #airplaneFire').css("display","block");
         } else {
+            $('#airplaneContent #airplaneSmoke').css("display","none");
             $('#airplaneContent #airplaneFire').css("display","none");
         }
         if(colisoes >= vidas) {
@@ -456,7 +462,11 @@ function exibePontuacao(){
 }
 
 function gameOver(){    
+    $('#airplaneContent').removeClass('frente').removeClass('esquerda').removeClass('direita').addClass('explosion');
+    $('#airplaneContent #airplaneSmoke').css("display","none");
+    $('#airplaneContent #airplaneFire').css("display","none");
     alert('GAME OVER - Você fez '+pontos+' pontos.');
     colisoes = 0;
     pontos = 0;
+    restart(false);
 }

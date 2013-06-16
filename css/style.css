@@ -108,6 +108,11 @@ html, body {
     background-position: -150px 0px;
 }
 
+#airplaneContent.explosion #airplane {
+    width: 150px;
+    background-position: 0px -150px;
+}
+
 #airplaneContent #airplaneFire {
     position: absolute;
     height: 150px;
@@ -125,6 +130,32 @@ html, body {
 
 #airplaneContent.esquerda #airplaneFire, #airplaneContent.direita #airplaneFire {
    width: 117px; 
+}
+
+#airplaneContent #airplaneSmoke {
+    position: absolute;
+    width: 150px;
+    height: 150px;
+    display: block;
+    background-image: url('../images/airplanes/airplane-p40-smoke.gif');
+    background-repeat: no-repeat;
+    z-index: 10;
+    display: none;
+}
+
+#airplaneContent.frente #airplaneSmoke {
+    width: 150px;
+    background-position: 0px 0px;
+}
+
+#airplaneContent.esquerda #airplaneSmoke {
+   width: 117px;
+   background-position: -267px 0px;
+}
+
+#airplaneContent.direita #airplaneSmoke {
+   width: 117px;
+   background-position: -150px 0px;
 }
 
 #objects {
