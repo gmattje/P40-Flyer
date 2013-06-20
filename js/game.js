@@ -138,20 +138,12 @@ $(document).keydown(function(e){
     
     //tecla esquerda
     if (e.keyCode == 37) {
-        if(deslocamento == 'direita') {
-            frente();
-        } else {
-            esquerda();
-        }
+        esquerda();
     }
     
     //tecla direita
     if (e.keyCode == 39) {
-        if(deslocamento == 'esquerda') {
-            frente();
-        } else {
-            direita();
-        }
+        direita();
     }   
     
 });
@@ -217,9 +209,13 @@ function dadosAviao(){
 
 function esquerda(){
     if(varPlay == true){
-        deslocamento = 'esquerda';
-        $('#airplaneContent').removeClass('frente').addClass('esquerda');
-        deslocaEsquerda();
+        if(deslocamento == 'direita') {
+            frente();
+        } else {
+            deslocamento = 'esquerda';
+            $('#airplaneContent').removeClass('frente').addClass('esquerda');
+            deslocaEsquerda();
+        }
     }
 }
 
@@ -263,9 +259,13 @@ function deslocaEsquerda(){
 
 function direita(){
     if(varPlay == true){
-        deslocamento = 'direita';
-        $('#airplaneContent').removeClass('frente').addClass('direita');
-        deslocaDireita();
+        if(deslocamento == 'esquerda') {
+            frente();
+        } else {            
+            deslocamento = 'direita';
+            $('#airplaneContent').removeClass('frente').addClass('direita');
+            deslocaDireita();
+        }
     }
 }
 
