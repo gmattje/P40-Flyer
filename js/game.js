@@ -80,15 +80,18 @@ function init(qtdVidas, valorVelocidade){
 function play(){
     if(varPlay == false) {
         varPlay = true;
-        $('#panelPause').css('display','none');
-        //potuação
-        timerPontuacao = setInterval('pontuacao(5)', ((velocidade*10)/4));
-        //cria linha obstaculos
-        timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*10));    
-        //rolagem obstaculos
-        timerRolaObstaculos = setInterval('rolagemObstaculos()', velocidade);
-        //controle colisao
-        timerControleColisao = setInterval('controleColisao()', velocidade);
+        $('#panelPause').css('display','none');        
+        ligaAviao();
+        setTimeout(function(){
+            //potuação
+            timerPontuacao = setInterval('pontuacao(5)', ((velocidade*10)/4));
+            //cria linha obstaculos
+            timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*10));    
+            //rolagem obstaculos
+            timerRolaObstaculos = setInterval('rolagemObstaculos()', velocidade);
+            //controle colisao
+            timerControleColisao = setInterval('controleColisao()', velocidade);            
+        }, 4000);       
     }
 }
 
@@ -105,10 +108,10 @@ function pause(){
 
 function restart(confirmacao){
     if(confirmacao == true) {
-        if(confirm('Deseja realmente reiniciar?')) {
+        if(confirm('Deseja realmente reiniciar?')) { 
             window.location.reload(true);
         }
-    } else {
+    } else { 
         window.location.reload(true);
     }
 }
@@ -189,6 +192,30 @@ function dadosAviao(){
     tamanhoPassagem = parseFloat(airplaneWidth)+parseFloat(airplaneWidth*(50/100));
     maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))-parseFloat(airplaneWidth/2));
     maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))+parseFloat(airplaneWidth/2)));
+}
+
+function ligaAviao(){  
+    frente();
+    document.getElementById('audio-p40-partida').play();
+    setTimeout(function(){
+        decolaAviao(); 
+    }, 4000);
+}
+
+function decolaAviao(){
+    document.getElementById('audio-p40-subindo').play();
+    setTimeout(function(){
+        document.getElementById('audio-p40-voando').play();
+    }, 11000);
+}
+
+function explodeAviao(){
+    document.getElementById('audio-p40-voando').pause();
+    document.getElementById('audio-p40-explosao').play();    
+    $('#airplaneContent').removeClass('frente').removeClass('esquerda').removeClass('direita').addClass('explosion');
+    $('#airplaneContent #airplanePropeller').css("display","none");
+    $('#airplaneContent #airplaneSmoke').css("display","none");
+    $('#airplaneContent #airplaneFire').css("display","none");
 }
 
 //movimentação avião para esquerda
@@ -470,11 +497,7 @@ function exibePontuacao(){
 }
 
 function gameOver(){    
-    $('#airplaneContent').removeClass('frente').removeClass('esquerda').removeClass('direita').addClass('explosion');
-    $('#airplaneContent #airplaneSmoke').css("display","none");
-    $('#airplaneContent #airplaneFire').css("display","none");
+    explodeAviao();
     alert('GAME OVER - Você fez '+pontos+' pontos.');
-    colisoes = 0;
-    pontos = 0;
     restart(false);
 }

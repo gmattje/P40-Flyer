@@ -19,8 +19,9 @@
         <div id="palco">
             <div id="obstaculos"></div>
         </div>
-        <div id="airplaneContent" class="frente">
-            <div id="airplane"></div>        
+        <div id="airplaneContent" class="desligado">
+            <div id="airplane"></div>
+            <div id="airplanePropeller"></div>
             <div id="airplaneSmoke"></div>
             <div id="airplaneFire"></div>
         </div>
@@ -32,6 +33,11 @@
             <div id="obj2" class="object"><img src="images/obstacles/Ob-2.png"/></div>
             <!--<div id="obj5" class="object"><img src="images/obstacles/Ob-2.png" width="50" height="50"/></div>-->
         </div>
+        <!-- Sons -->
+        <audio id="audio-p40-partida" preload="auto" src="sounds/P40-partida.mp3"></audio>
+        <audio id="audio-p40-subindo" preload="auto" src="sounds/P40-subindo.mp3"></audio>
+        <audio id="audio-p40-voando" preload="auto" src="sounds/P40-voando.mp3" loop></audio>
+        <audio id="audio-p40-explosao" preload="auto" src="sounds/P40-explosao.mp3"></audio>
         <div id="panelPause">
             <br/><br/>PAUSE<br/><br/>
             [&ShortDownArrow;] Resume | [R] Restart

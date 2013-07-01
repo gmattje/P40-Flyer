@@ -93,7 +93,7 @@ html, body {
     z-index: 9;
 }
 
-#airplaneContent.frente #airplane {
+#airplaneContent.desligado #airplane, #airplaneContent.frente #airplane {
     width: 150px;
     background-position: 0px 0px;
 }
@@ -111,6 +111,35 @@ html, body {
 #airplaneContent.explosion #airplane {
     width: 150px;
     background-position: 0px -150px;
+}
+
+#airplaneContent #airplanePropeller {
+    position: absolute;
+    height: 150px;
+    display: block;
+    background-image: url('../images/airplanes/airplane-p40-propeller.gif');
+    background-repeat: no-repeat;
+    z-index: 10;
+}
+
+#airplaneContent.desligado #airplanePropeller {
+    width: 150px;
+    background-position: 0px 0px;
+}
+
+#airplaneContent.frente #airplanePropeller {
+    width: 150px;
+    background-position: -150px 0px;
+}
+
+#airplaneContent.esquerda #airplanePropeller {
+   width: 117px;
+   background-position: -416px 0px;
+}
+
+#airplaneContent.direita #airplanePropeller {
+   width: 117px;
+   background-position: -299px 0px;
 }
 
 #airplaneContent #airplaneFire {
@@ -139,7 +168,7 @@ html, body {
     display: block;
     background-image: url('../images/airplanes/airplane-p40-smoke.gif');
     background-repeat: no-repeat;
-    z-index: 10;
+    z-index: 11;
     display: none;
 }
 
