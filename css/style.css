@@ -129,7 +129,7 @@ html, body {
 
 #airplaneContent.frente #airplanePropeller {
     width: 150px;
-    background-position: -150px 0px;
+    background-position: -149px 0px;
 }
 
 #airplaneContent.esquerda #airplanePropeller {

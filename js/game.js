@@ -17,7 +17,8 @@ var tamanhoPassagem = 0;
 
 //movimentação
 //máximo movimentação avião
-var deslocamento = 'frente';
+var deslocamento = 'desligado';
+var altitude = 0;
 var maxMovDireita = 0;
 var maxMovEsquerda = 0;
 var movimentacao = 0; //mover em pixel a cada interação
@@ -80,30 +81,44 @@ function init(qtdVidas, valorVelocidade){
 function play(){
     if(varPlay == false) {
         varPlay = true;
-        $('#panelPause').css('display','none');        
-        ligaAviao();
+        $('#panelPause').css('display','none');
+        muted(false);
+        if(deslocamento == 'desligado') {
+            ligaAviao();
+            var aguardar = "4000";
+        } else {
+            var aguardar = "0";
+        }
         setTimeout(function(){
             //potuação
             timerPontuacao = setInterval('pontuacao(5)', ((velocidade*10)/4));
             //cria linha obstaculos
-            timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*10));    
+            timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*6));    
             //rolagem obstaculos
             timerRolaObstaculos = setInterval('rolagemObstaculos()', velocidade);
             //controle colisao
             timerControleColisao = setInterval('controleColisao()', velocidade);            
-        }, 4000);       
+        }, aguardar);       
     }
 }
 
 function pause(){
-    if(varPlay == true) {
+    if((varPlay == true) && (aviaoAutorizaPausar() == true)) {
         varPlay = false;
         $('#panelPause').css('display','block');
+        muted(true);
         clearInterval(timerPontuacao);
         clearInterval(timerCriaObstaculos);
         clearInterval(timerRolaObstaculos);
         clearInterval(timerControleColisao);        
     }
+}
+
+function muted(status){
+    document.getElementById('audio-p40-partida').muted = status;
+    document.getElementById('audio-p40-subindo').muted = status;
+    document.getElementById('audio-p40-voando').muted = status;
+    document.getElementById('audio-p40-explosao').muted = status;
 }
 
 function restart(confirmacao){
@@ -194,6 +209,14 @@ function dadosAviao(){
     maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))+parseFloat(airplaneWidth/2)));
 }
 
+function aviaoAutorizaPausar(){
+    var autoriza = true;
+    if(altitude == 0) {
+        autoriza = false;
+    }
+    return autoriza;
+}
+
 function ligaAviao(){  
     frente();
     document.getElementById('audio-p40-partida').play();
@@ -203,10 +226,19 @@ function ligaAviao(){
 }
 
 function decolaAviao(){
+    altitude = 10;
     document.getElementById('audio-p40-subindo').play();
     setTimeout(function(){
-        document.getElementById('audio-p40-voando').play();
-    }, 11000);
+       voando();        
+    }, 13000);
+}
+
+function voando(){
+    altitude = 1000;
+    document.getElementById('audio-p40-voando').play();
+    setInterval(function(){
+        document.getElementById('audio-p40-voando').currentTime = 0;
+    }, 4318);
 }
 
 function explodeAviao(){
@@ -235,7 +267,7 @@ function explodeAviao(){
 //}
 
 function esquerda(){
-    if(varPlay == true){
+    if((varPlay == true) && (altitude >= 10)){
         if(deslocamento == 'direita') {
             frente();
         } else {
@@ -285,7 +317,7 @@ function deslocaEsquerda(){
 //}
 
 function direita(){
-    if(varPlay == true){
+    if((varPlay == true) && (altitude >= 10)){
         if(deslocamento == 'esquerda') {
             frente();
         } else {            

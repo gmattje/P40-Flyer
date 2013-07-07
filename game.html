@@ -10,6 +10,15 @@
         <script type="text/javascript" src="js/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js"></script>
         <script type="text/javascript" src="js/jquery.queryloader2.js"></script>
         <script type="text/javascript" src="js/game.js"></script>
+        
+        <script>
+        $(document).ready(function (){
+            $("body").queryLoader2({barHeight: '5', percentage: true, onComplete: function(){
+                init(6, 200);        
+            }});
+        });
+        </script>
+        
     </head>
     <body>
         <div id="infos">
@@ -34,21 +43,29 @@
             <!--<div id="obj5" class="object"><img src="images/obstacles/Ob-2.png" width="50" height="50"/></div>-->
         </div>
         <!-- Sons -->
-        <audio id="audio-p40-partida" preload="auto" src="sounds/P40-partida.mp3"></audio>
-        <audio id="audio-p40-subindo" preload="auto" src="sounds/P40-subindo.mp3"></audio>
-        <audio id="audio-p40-voando" preload="auto" src="sounds/P40-voando.mp3" loop></audio>
-        <audio id="audio-p40-explosao" preload="auto" src="sounds/P40-explosao.mp3"></audio>
+        <audio class="audio" id="audio-p40-partida" preload="auto">
+            <source src="sounds/P40-partida.ogg">
+            <source src="sounds/P40-partida.wav">
+            <source src="sounds/P40-partida.mp3">
+        </audio>
+        <audio class="audio" id="audio-p40-subindo" preload="auto">
+            <source src="sounds/P40-subindo.ogg">
+            <source src="sounds/P40-subindo.wav">
+            <source src="sounds/P40-subindo.mp3">
+        </audio>
+        <audio class="audio" id="audio-p40-voando" preload="auto">
+            <source src="sounds/P40-voando.ogg">
+            <source src="sounds/P40-voando.wav">
+            <source src="sounds/P40-voando.mp3">
+        </audio>
+        <audio class="audio" id="audio-p40-explosao" preload="auto">
+            <source src="sounds/P40-explosao.ogg">
+            <source src="sounds/P40-explosao.wav">
+            <source src="sounds/P40-explosao.mp3">
+        </audio>
         <div id="panelPause">
             <br/><br/>PAUSE<br/><br/>
             [&ShortDownArrow;] Resume | [R] Restart
         </div>
     </body>
-    
-    <script>
-        $(document).ready(function (){
-            $("body").queryLoader2({barHeight: '5', percentage: true, onComplete: function(){
-                init(6, 200);        
-            }});
-        });
-    </script>
 </html>
