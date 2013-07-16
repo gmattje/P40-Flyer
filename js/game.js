@@ -49,6 +49,10 @@ var objectsMaximos = new Array();
 var encontroX = false;
 var encontroY = false;
 
+//nuvens
+var clouds = new Array();
+var cloudsMaximos = new Array();
+
 //colisoes
 var colisoes = 0;
 
@@ -72,10 +76,14 @@ function init(qtdVidas, valorVelocidade){
     velocidade = valorVelocidade;
     //recupera dados dos possíveis obstáculos
     dadosObjetos();
+    //dados das núvens
+    dadosClouds();
     //calculando dados do avião
     dadosAviao();
     //primeira linha de obstáculos
     criaLinhaObstaculos(3);
+    //primeira linha de nuvens
+    criaLinhaNuvens(3);
 }
 
 function play(){
@@ -96,6 +104,10 @@ function play(){
             timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*6));    
             //rolagem obstaculos
             timerRolaObstaculos = setInterval('rolagemObstaculos()', velocidade);
+            //cria linha de núvens
+            timerCriaNuvens = setInterval('criaLinhaNuvens(1)', (velocidade*3));
+            //rolagem nuvens
+            timerRolaNuvens = setInterval('rolagemNuvens()', velocidade);
             //controle colisao
             timerControleColisao = setInterval('controleColisao()', velocidade);            
         }, aguardar);       
@@ -110,6 +122,7 @@ function pause(){
         clearInterval(timerPontuacao);
         clearInterval(timerCriaObstaculos);
         clearInterval(timerRolaObstaculos);
+        clearInterval(timerRolaNuvens);
         clearInterval(timerControleColisao);        
     }
 }
@@ -193,6 +206,16 @@ function dadosObjetos(){
         var tamanhoObject = $(this).children('img').css('width').replace('px','');
         objects[numObjects] = tamanhoObject;
         numObjects++; 
+    });
+}
+
+//dados sobre nuvens
+function dadosClouds(){
+    var numNuvens = 0;
+    $('#objects_other').children('.cloud').each(function(i){
+        var tamanhoCloud = $(this).children('img').css('width').replace('px','');
+        clouds[numNuvens] = tamanhoCloud;
+        numNuvens++; 
     });
 }
 
@@ -353,7 +376,7 @@ function deslocaDireita(){
 function frente(){
     if(varPlay == true){
         deslocamento = 'frente';
-        $('#airplaneContent').removeClass('esquerda').removeClass('direita').addClass('frente');
+        $('#airplaneContent').removeClass('desligado').removeClass('esquerda').removeClass('direita').addClass('frente');
     }
 }
 
@@ -429,6 +452,61 @@ function indexObstaculoAleatorio(tamanhoMaximo){
 //rolagem dos obstáculos
 function rolagemObstaculos(){
     $('#obstaculos').animate({bottom:'-=10%'}, velocidade);
+}
+
+//criando linhas de obstáculos aleatórios
+function criaLinhaNuvens(quantidade){       
+    
+    //cria quantas linhas foram solicitadas
+    for(var i=0; i<quantidade; i++) {
+    
+        //cria elemento linha
+        var novaLinha = $('<div>').prependTo('#nuvens').addClass('linha');
+
+        //elementos
+        var primeiroElemento = true;
+        var tamMax = palcoWidth;
+        while(tamMax > 0) {
+            indexNuvem = indexNuvemAleatorio(tamMax);
+
+            if(primeiroElemento == true) {
+                var inicioAletorio = Math.floor((Math.random()*(tamanhoPassagem+parseFloat(tamanhoPassagem*(25/100)))));
+                tamMax = tamMax-inicioAletorio-clouds[indexNuvem];
+                if(tamMax >= 0) {
+                    $('#cloud'+indexNuvem).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
+                }
+                primeiroElemento = false;
+            } else {
+                tamMax = tamMax-tamanhoPassagem-clouds[indexNuvem];
+                if(tamMax >= 0) {
+                    $('#cloud'+indexNuvem).clone().appendTo(novaLinha).css('margin-left',tamanhoPassagem);
+                }
+            }        
+        }
+    
+    }
+    
+    $('#nuvens').children('<div>:last').remove();
+    
+}
+
+//escolhe elemento aleatorio com tamanho máximo
+function indexNuvemAleatorio(tamanhoMaximo){
+    var numObjects = 0;
+    $.each(clouds, function( index, value ){
+        if(parseFloat(value) <= parseFloat(tamanhoMaximo)) {
+            cloudsMaximos[numObjects] = index;
+            numObjects++;
+        }
+    });
+    var quantidadeClouds = cloudsMaximos.length;
+    var elementoAleatorio = Math.floor((Math.random()*quantidadeClouds));
+    return cloudsMaximos[elementoAleatorio];
+}
+
+//rolagem dos obstáculos
+function rolagemNuvens(){
+    $('#nuvens').animate({bottom:'-=15%'}, velocidade);
 }
 
 function controleColisao(){

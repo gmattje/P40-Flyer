@@ -26,6 +26,16 @@ html, body {
     z-index: 9;    
 }
 
+.objects {
+    position: absolute;
+    top: -1000%;
+    opacity: 0;
+}
+
+.objects img {
+    float: left;
+}
+
 #palco {
     position: absolute;
     width: 100%;
@@ -60,12 +70,36 @@ html, body {
     visibility: hidden;
 }
 
+#planoSuperior {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 10;    
+}
+
+#planoSuperior #nuvens {
+    position: absolute;
+    bottom: 0px;
+    padding-bottom: 100%;
+}
+
+#planoSuperior #nuvens .linha {
+    width: 100%;
+    float: left;
+    margin-bottom: 600px;
+}
+
+#planoSuperior #nuvens .linha .cloud {
+    float: left;
+}
+
 #panelPause {
     position: absolute;
     width: 100%;
     height: 100%;
     display: none;
-    z-index: 10;
+    z-index: 11;
     opacity: 0.7;
     background-color: #000;
     text-align: center;
@@ -185,16 +219,6 @@ html, body {
 #airplaneContent.direita #airplaneSmoke {
    width: 117px;
    background-position: -150px 0px;
-}
-
-#objects {
-    position: absolute;
-    top: -1000%;
-    opacity: 0;
-}
-
-#objects img {
-    float: left;
 }
 
 #palco .pontoNegativo {
