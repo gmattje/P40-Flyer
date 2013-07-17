@@ -74,6 +74,9 @@ function init(qtdVidas, valorVelocidade){
     }
     //setando velocidade
     velocidade = valorVelocidade;
+    //tamanho palco
+    $('#palco').css('width',getDocWidth()+'px');
+    $('#planoSuperior').css('width',getDocWidth()+'px');
     //recupera dados dos possíveis obstáculos
     dadosObjetos();
     //dados das núvens
@@ -186,6 +189,8 @@ function getDocWidth(){
     document.compatMode!=='BackCompat'? document.documentElement.clientWidth :
     document.body.clientWidth
     );
+    //menos tamanho da barra lateral
+    width = width-150;
     return width;
 }
 
@@ -228,8 +233,11 @@ function dadosAviao(){
     air_y1 = $('#airplane').offset().top;
     air_y2 = air_y1+parseFloat(airplaneHeight);
     tamanhoPassagem = parseFloat(airplaneWidth)+parseFloat(airplaneWidth*(50/100));
-    maxMovDireita = parseFloat(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))-parseFloat(airplaneWidth/2));
-    maxMovEsquerda = parseFloat("-"+(parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2))+parseFloat(airplaneWidth/2)));
+    maxMovDireita = parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2));
+    //maxMovDireita = parseFloat(maxMovDireita-parseFloat(airplaneWidth/2));
+    maxMovEsquerda = parseFloat(parseFloat(palcoWidth/2)-parseFloat(airplaneWidth/2));
+    //maxMovEsquerda = parseFloat(maxMovEsquerda+parseFloat(airplaneWidth/2));
+    maxMovEsquerda = "-"+parseFloat(maxMovEsquerda);
 }
 
 function aviaoAutorizaPausar(){

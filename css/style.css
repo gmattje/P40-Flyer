@@ -3,7 +3,24 @@ html, body {
     overflow: hidden;
 }
 
-#vidas .vida {
+#barraLateral {
+    position: absolute;
+    width: 150px;
+    height: 100%;
+    display: block;
+    background-color: #000;
+    color: #FFF;
+    z-index: 9;
+}
+
+#barraLateral #infos {
+    position: relative;
+    width: 100%;
+    height: 100px;
+    display: block; 
+}
+
+#barraLateral #infos #vidas .vida {
     width: 16px;
     height: 15px;
     display: block;
@@ -12,18 +29,8 @@ html, body {
     background-repeat: no-repeat;
 }
 
-#vidas .off {
+#barraLateral #infos #vidas .off {
     background-position: -16px 0px;
-}
-
-#infos {
-    position: absolute;
-    width: 100px;
-    height: 100px;
-    display: block;
-    top: 0px;
-    left: 0px;
-    z-index: 9;    
 }
 
 .objects {
@@ -40,6 +47,7 @@ html, body {
     position: absolute;
     width: 100%;
     height: 100%;
+    right: 0px;
     display: block;
     z-index: 1;    
 }
@@ -49,6 +57,7 @@ html, body {
     bottom: 0px;
     padding-bottom: 100%;
     background-image: url('../images/patterns/snow.jpg');
+    background-position: 100% 100%;
 }
 
 #palco #obstaculos .linha {
@@ -74,6 +83,7 @@ html, body {
     position: absolute;
     width: 100%;
     height: 100%;
+    right: 0px;
     display: block;
     z-index: 10;    
 }
@@ -114,7 +124,7 @@ html, body {
     display: block;
     bottom: 5px;
     left: 50%;
-    margin-left: -75px;
+    /*margin-left: -75px;*/
     z-index: 9;    
 }
 
