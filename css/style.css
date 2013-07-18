@@ -20,6 +20,20 @@ html, body {
     display: block; 
 }
 
+#barraLateral #infos #pontos {
+    position: relative;
+    float: left;
+    width: 100%;
+    display: block;
+}
+
+#barraLateral #infos #vidas {
+    position: relative;
+    float: left;
+    width: 100%;
+    display: block;
+}
+
 #barraLateral #infos #vidas .vida {
     width: 16px;
     height: 15px;
@@ -31,6 +45,29 @@ html, body {
 
 #barraLateral #infos #vidas .off {
     background-position: -16px 0px;
+}
+
+#barraLateral #infos #cash {
+    position: relative;
+    float: left;
+    width: 100%;
+    display: block;
+}
+
+#barraLateral #infos #fuel {
+    position: relative;
+    float: left;
+    width: 15%;
+    height: 200px;
+    display: block;
+    background-color: red;
+}
+
+#barraLateral #infos #barFuel {
+    position: absolute;
+    width: 100%;
+    bottom: 0px;
+    background-color: green;
 }
 
 .objects {

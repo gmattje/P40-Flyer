@@ -62,6 +62,12 @@ var vidas = 0;
 //pontuacao
 var pontos = 0;
 
+//cash
+var cash = 0;
+
+//gasolina/diesel
+var fuel = 0; //porcento (%)
+
 //se jogo está rolando
 var varPlay = false;
 
@@ -72,6 +78,8 @@ function init(qtdVidas, valorVelocidade){
     for(var i=1;i<=vidas;i++){
         $('<div>').prependTo('#vidas').addClass('vida').attr('id','vida_'+i);
     }
+    //setando gasolina
+    varFuel(90);
     //setando velocidade
     velocidade = valorVelocidade;
     //tamanho palco
@@ -103,6 +111,10 @@ function play(){
         setTimeout(function(){
             //potuação
             timerPontuacao = setInterval('pontuacao(5)', ((velocidade*10)/4));
+            //cash
+            timerCash = setInterval('varCash(2)', (velocidade*5));
+            //gasolina
+            timerFuel = setInterval('varFuel(-1)', (velocidade*4));
             //cria linha obstaculos
             timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*6));    
             //rolagem obstaculos
@@ -123,6 +135,8 @@ function pause(){
         $('#panelPause').css('display','block');
         muted(true);
         clearInterval(timerPontuacao);
+        clearInterval(timerCash);
+        clearInterval(timerFuel);
         clearInterval(timerCriaObstaculos);
         clearInterval(timerRolaObstaculos);
         clearInterval(timerRolaNuvens);
@@ -612,6 +626,30 @@ function exibePontuacaoNegativa(valor){
 
 function exibePontuacao(){
     $('#pontos').html(pontos+" Pontos");
+}
+
+function varCash(valor){
+    cash = cash + valor;
+    if(cash < 0) {
+        cash = 0;
+    }
+    exibeCash();
+}
+
+function exibeCash(){
+    $('#cash').html("$ "+cash+",00");
+}
+
+function varFuel(valor){
+    fuel = fuel + valor;
+    if(fuel < 0) {
+        fuel = 0;
+    }
+    exibeFuel();
+}
+
+function exibeFuel(){
+    $('#barFuel').css("height",fuel+"%");
 }
 
 function gameOver(){    
