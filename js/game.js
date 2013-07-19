@@ -79,7 +79,7 @@ function init(qtdVidas, valorVelocidade){
         $('<div>').prependTo('#vidas').addClass('vida').attr('id','vida_'+i);
     }
     //setando gasolina
-    varFuel(90);
+    varFuel(80);
     //setando velocidade
     velocidade = valorVelocidade;
     //tamanho palco

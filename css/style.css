@@ -54,20 +54,39 @@ html, body {
     display: block;
 }
 
-#barraLateral #infos #fuel {
+#barraLateral #infos #contentFuel {
     position: relative;
     float: left;
-    width: 15%;
-    height: 200px;
+    width: 116px;
+    height: 328px;
     display: block;
+    margin-left: 14px;
     background-color: red;
 }
 
-#barraLateral #infos #barFuel {
+#barraLateral #infos #contentFuel #fuel {
+    position: relative;
+    float: left;
+    width: 116px;
+    height: 246px;
+    display: block;
+    margin-top: 28px;
+    background-color: red;
+}
+
+#barraLateral #infos #contentFuel #fuel #barFuel {
     position: absolute;
     width: 100%;
     bottom: 0px;
     background-color: green;
+}
+
+#barraLateral #infos #contentFuel #maskFuel {
+    position: absolute;
+    width: 116px;
+    height: 328px;
+    background-image: url('../images/interface/fuel.png');
+    z-index: 10;
 }
 
 .objects {
