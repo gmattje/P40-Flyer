@@ -146,7 +146,7 @@ html, body {
 }
 
 #palco #obstaculos .linha .object.fuel.crash {
-    display: none;
+    visibility: hidden;
 }
 
 #palco #obstaculos .linha .crash img {
