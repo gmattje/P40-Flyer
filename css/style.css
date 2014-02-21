@@ -140,9 +140,13 @@ html, body {
     float: left;    
 }
 
-#palco #obstaculos .linha .crash {
+#palco #obstaculos .linha .object.crash {
     background-image: url('../images/obstacles/crashed.jpg');
     background-size: 100% 100%;
+}
+
+#palco #obstaculos .linha .object.fuel.crash {
+    display: none;
 }
 
 #palco #obstaculos .linha .crash img {

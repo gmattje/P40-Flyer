@@ -495,7 +495,7 @@ function indexObstaculoAleatorio(tamanhoMaximo){
 function criaFuels(){
     
     //cria elemento linha
-    var novaLinha = $('<div>').prependTo('#obstaculos').addClass('fuel');
+    var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha');
     
     //elementos
     var tamMax = palcoWidth;
@@ -596,32 +596,29 @@ function controleColisao(){
                 var obj_y1 = $(this).children('img').offset().top; 
                 var obj_y2 = parseFloat(obj_y1)+parseFloat(objHeight);
                 if($(this).attr('class') != "crash") {
-                if(parseFloat(obj_y2) > parseFloat(air_y1)) {
-                    //caso batida na esquerda
-                    if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
-                        colidiu($(this));                
-                    }
-                    //caso batida toda esquerda
-                    else if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y1) > parseFloat(air_y1))) {
-                        colidiu($(this));                
-                    }
-                    //caso batida na direia
-                    else if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
-                        colidiu($(this)); 
-                    }
-                    //caso batida toda direita
-                    else if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y1) > parseFloat(air_y1))) {
-                        colidiu($(this));                
-                    }
-                    //caso batida em todo obstáculo
-                    else if((parseFloat(obj_x2) < parseFloat(air_x2)) && (parseFloat(obj_x1) > parseFloat(air_x1)) && (parseFloat(obj_y2) < parseFloat(air_y2))) {
-                        colidiu($(this)); 
+                    if(parseFloat(obj_y2) > parseFloat(air_y1)) {
+                        //caso batida na esquerda
+                        if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
+                            colidiu($(this));                
+                        }
+                        //caso batida toda esquerda
+                        else if((parseFloat(obj_x2) > parseFloat(air_x1)) && (parseFloat(obj_x1) < parseFloat(air_x1)) && (parseFloat(obj_y1) > parseFloat(air_y1))) {
+                            colidiu($(this));                
+                        }
+                        //caso batida na direia
+                        else if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y2) <= parseFloat(air_y2))) {
+                            colidiu($(this)); 
+                        }
+                        //caso batida toda direita
+                        else if((parseFloat(obj_x2) > parseFloat(air_x2)) && (parseFloat(obj_x1) < parseFloat(air_x2)) && (parseFloat(obj_y1) > parseFloat(air_y1))) {
+                            colidiu($(this));                
+                        }
+                        //caso batida em todo obstáculo
+                        else if((parseFloat(obj_x2) < parseFloat(air_x2)) && (parseFloat(obj_x1) > parseFloat(air_x1)) && (parseFloat(obj_y2) < parseFloat(air_y2))) {
+                            colidiu($(this)); 
+                        }
                     }
                 }
-                }
-                if(parseFloat(obj_y1) > parseFloat(palcoHeight)) {
-                    
-                } 
             }); 
         }
     })
@@ -631,28 +628,39 @@ function controleColisao(){
 function colidiu(elemento){
     //confere novamente se objato já não tinha sido atingido
     if(elemento.attr('class') != "crash") {
-        colisoes++;
-        elemento.removeClass('object').addClass('crash');         
-        $('#vida_'+colisoes).addClass('off');
-        pontuacao(-20); 
         
-        if(colisoes >= vidas) {
-            gameOver(true);
-        } else {        
-            //pisca com jquery-ui
-            $("#airplaneContent").effect('pulsate', {}, 500);
+        //se for objeto comum
+        if(elemento.attr('class') == "object") {
+            colisoes++;
+            elemento.addClass('crash');         
+            $('#vida_'+colisoes).addClass('off');
+            pontuacao(-20); 
 
-            if(vidas-colisoes <= 3) {
-                $('#airplaneContent #airplaneSmoke').css("display","block");
-            } else {
-                $('#airplaneContent #airplaneSmoke').css("display","none");
-            }
-            if(vidas-colisoes <= 2) {
-                $('#airplaneContent #airplaneFire').css("display","block");
-            } else {
-                $('#airplaneContent #airplaneFire').css("display","none");
-            }
-        }        
+            if(colisoes >= vidas) {
+                gameOver(true);
+            } else {        
+                //pisca com jquery-ui
+                $("#airplaneContent").effect('pulsate', {}, 500);
+
+                if(vidas-colisoes <= 3) {
+                    $('#airplaneContent #airplaneSmoke').css("display","block");
+                } else {
+                    $('#airplaneContent #airplaneSmoke').css("display","none");
+                }
+                if(vidas-colisoes <= 2) {
+                    $('#airplaneContent #airplaneFire').css("display","block");
+                } else {
+                    $('#airplaneContent #airplaneFire').css("display","none");
+                }
+            }  
+        }
+        
+        //se for combustível
+        if(elemento.attr('class') == "object fuel") {
+            varFuel(10);
+            elemento.addClass('crash');
+        }
+        
     }      
 }
 
