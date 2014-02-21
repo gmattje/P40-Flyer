@@ -18,7 +18,7 @@ var tamanhoPassagem = 0;
 //movimentação
 //máximo movimentação avião
 var deslocamento = 'desligado';
-var altitude = 0;
+var pes = 0;
 var maxMovDireita = 0;
 var maxMovEsquerda = 0;
 var movimentacao = 0; //mover em pixel a cada interação
@@ -48,6 +48,10 @@ var objects = new Array();
 var objectsMaximos = new Array();
 var encontroX = false;
 var encontroY = false;
+
+//fuels
+var fuels = new Array();
+var fuelsMaximos = new Array();
 
 //nuvens
 var clouds = new Array();
@@ -79,7 +83,7 @@ function init(qtdVidas, valorVelocidade){
         $('<div>').prependTo('#vidas').addClass('vida').attr('id','vida_'+i);
     }
     //setando gasolina
-    varFuel(80);
+    varFuel(40);
     //setando velocidade
     velocidade = valorVelocidade;
     //tamanho palco
@@ -87,6 +91,8 @@ function init(qtdVidas, valorVelocidade){
     $('#planoSuperior').css('width',getDocWidth()+'px');
     //recupera dados dos possíveis obstáculos
     dadosObjetos();
+    //dados dos fuels
+    dadosFuels();
     //dados das núvens
     dadosClouds();
     //calculando dados do avião
@@ -116,7 +122,9 @@ function play(){
             //gasolina
             timerFuel = setInterval('varFuel(-1)', (velocidade*4));
             //cria linha obstaculos
-            timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*6));    
+            timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*6));
+            //cria linha fuels
+            timerCriaFuels = setInterval('criaFuels()', (velocidade*12));
             //rolagem obstaculos
             timerRolaObstaculos = setInterval('rolagemObstaculos()', velocidade);
             //cria linha de núvens
@@ -138,6 +146,7 @@ function pause(){
         clearInterval(timerCash);
         clearInterval(timerFuel);
         clearInterval(timerCriaObstaculos);
+        clearInterval(timerCriaFuels);
         clearInterval(timerRolaObstaculos);
         clearInterval(timerRolaNuvens);
         clearInterval(timerControleColisao);        
@@ -193,6 +202,16 @@ function dadosObjetos(){
     });
 }
 
+//dados sobre fuels
+function dadosFuels(){
+    var numFuels = 0;
+    $('#objects_other').children('.fuel').each(function(i){
+        var tamanhoFuel = $(this).children('img').css('width').replace('px','');
+        fuels[numFuels] = tamanhoFuel;
+        numFuels++; 
+    });
+}
+
 //dados sobre nuvens
 function dadosClouds(){
     var numNuvens = 0;
@@ -221,7 +240,7 @@ function dadosAviao(){
 
 function aviaoAutorizaPausar(){
     var autoriza = true;
-    if(altitude == 0) {
+    if(pes == 0) {
         autoriza = false;
     }
     return autoriza;
@@ -236,7 +255,9 @@ function ligaAviao(){
 }
 
 function decolaAviao(){
-    altitude = 10;
+    $('#airplaneContent').removeClass('pes'+pes);
+    pes = 10;
+    $('#airplaneContent').addClass('pes'+pes);
     document.getElementById('audio-p40-subindo').play();
     setTimeout(function(){
        voando();        
@@ -244,7 +265,9 @@ function decolaAviao(){
 }
 
 function voando(){
-    altitude = 1000;
+    $('#airplaneContent').removeClass('pes'+pes);
+    pes = 1000;
+    $('#airplaneContent').addClass('pes'+pes);
     document.getElementById('audio-p40-voando').play();
     setInterval(function(){
         document.getElementById('audio-p40-voando').currentTime = 0;
@@ -261,7 +284,9 @@ function desligaAviao(){
 }
 
 function pousaAviao(){
-    altitude = 10;
+    $('#airplaneContent').removeClass('pes'+pes);
+    pes = 0;
+    $('#airplaneContent').addClass('pes'+pes);
     velocidade = velocidade*2;
     setTimeout(function(){
         velocidade = 0;
@@ -269,6 +294,7 @@ function pousaAviao(){
         clearInterval(timerCash);
         clearInterval(timerFuel);
         clearInterval(timerCriaObstaculos);
+        clearInterval(timerCriaFuels);
         clearInterval(timerRolaObstaculos);
         clearInterval(timerRolaNuvens);
         clearInterval(timerControleColisao);        
@@ -279,7 +305,9 @@ function pousaAviao(){
 }
 
 function explodeAviao(){
-    document.getElementById('audio-p40-voando').pause();
+    document.getElementById('audio-p40-partida').muted = true;
+    document.getElementById('audio-p40-subindo').muted = true;
+    document.getElementById('audio-p40-voando').muted = true;
     document.getElementById('audio-p40-explosao').play();    
     $('#airplaneContent').removeClass('frente').removeClass('esquerda').removeClass('direita').addClass('explosion');
     $('#airplaneContent #airplanePropeller').css("display","none");
@@ -304,7 +332,7 @@ function explodeAviao(){
 //}
 
 function esquerda(){
-    if((varPlay == true) && (deslocamento != 'desligado') && (altitude >= 10)){
+    if((varPlay == true) && (deslocamento != 'desligado') && (pes >= 10)){
         if(deslocamento == 'direita') {
             frente();
         } else {
@@ -354,7 +382,7 @@ function deslocaEsquerda(){
 //}
 
 function direita(){
-    if((varPlay == true) && (deslocamento != 'desligado') && (altitude >= 10)){
+    if((varPlay == true) && (deslocamento != 'desligado') && (pes >= 10)){
         if(deslocamento == 'esquerda') {
             frente();
         } else {            
@@ -463,12 +491,46 @@ function indexObstaculoAleatorio(tamanhoMaximo){
     return objectsMaximos[elementoAleatorio];
 }
 
+//criando fuel
+function criaFuels(){
+    
+    //cria elemento linha
+    var novaLinha = $('<div>').prependTo('#obstaculos').addClass('fuel');
+    
+    //elementos
+    var tamMax = palcoWidth;
+    indexFuel = indexFuelAleatorio(tamMax);
+
+    var inicioAletorio = Math.floor((Math.random()*tamMax));
+    tamMax = tamMax-inicioAletorio-fuels[indexFuel];
+    if(tamMax >= 0) {
+        $('#fuel'+indexFuel).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
+    }
+    
+    $('#fuels').children('<div>:last').remove();
+    
+}
+
+//escolhe elemento aleatorio com tamanho máximo
+function indexFuelAleatorio(tamanhoMaximo){
+    var numObjects = 0;
+    $.each(fuels, function( index, value ){
+        if(parseFloat(value) <= parseFloat(tamanhoMaximo)) {
+            fuelsMaximos[numObjects] = index;
+            numObjects++;
+        }
+    });
+    var quantidadeFuels = fuelsMaximos.length;
+    var elementoAleatorio = Math.floor((Math.random()*quantidadeFuels));
+    return fuelsMaximos[elementoAleatorio];
+}
+
 //rolagem dos obstáculos
 function rolagemObstaculos(){
     $('#obstaculos').animate({bottom:'-=10%'}, velocidade);
 }
 
-//criando linhas de obstáculos aleatórios
+//criando linhas de nuvens
 function criaLinhaNuvens(quantidade){       
     
     //cria quantas linhas foram solicitadas

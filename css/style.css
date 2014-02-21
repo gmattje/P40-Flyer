@@ -113,7 +113,7 @@ html, body {
     height: 100%;
     right: 0px;
     display: block;
-    z-index: 1;    
+    z-index: 1;  
 }
 
 #palco #obstaculos {
@@ -128,6 +128,12 @@ html, body {
     width: 100%;
     float: left;
     margin-bottom: 550px;
+}
+
+#palco #obstaculos .fuel {
+    width: 100%;
+    float: left;
+    margin-bottom: 50px;
 }
 
 #palco #obstaculos .linha .object, #palco #obstaculos .linha .crash {
@@ -189,7 +195,28 @@ html, body {
     bottom: 5px;
     left: 50%;
     /*margin-left: -75px;*/
-    z-index: 9;    
+    z-index: 9;
+    transition: transform 2s linear;
+    transition: -ms-transform 2s linear;
+    transition: -webkit-transform 2s linear;    
+}
+
+#airplaneContent.pes0 {
+    transform: scale(0.6);   
+    -ms-transform: scale(0.6);
+    -webkit-transform: scale(0.6);
+}
+
+#airplaneContent.pes10 {
+    transform: scale(0.8); 
+    -ms-transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+}
+
+#airplaneContent.pes1000 {
+    transform: scale(1); 
+    -ms-transform: scale(1);
+    -webkit-transform: scale(1);
 }
 
 #airplaneContent #airplane {
@@ -261,7 +288,7 @@ html, body {
     display: none;
 }
 
-#airplaneContent.frente #airplaneFire {
+#airplaneContent #airplaneFire, #airplaneContent.frente #airplaneFire {
     width: 150px;
 }
 
