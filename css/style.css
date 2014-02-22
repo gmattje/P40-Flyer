@@ -138,6 +138,10 @@ html, body {
     background-size: 100% 100%;
 }
 
+#palco #obstaculos .linha .object.life.crash {
+    visibility: hidden;
+}
+
 #palco #obstaculos .linha .object.fuel.crash {
     visibility: hidden;
 }

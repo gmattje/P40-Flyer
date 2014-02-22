@@ -49,6 +49,10 @@ var objectsMaximos = new Array();
 var encontroX = false;
 var encontroY = false;
 
+//lifes
+var lifes = new Array();
+var lifesMaximos = new Array();
+
 //fuels
 var fuels = new Array();
 var fuelsMaximos = new Array();
@@ -78,10 +82,7 @@ var varPlay = false;
 //função de inicialização
 function init(qtdVidas, valorVelocidade){
     //setando vidas
-    vidas = qtdVidas;
-    for(var i=1;i<=vidas;i++){
-        $('<div>').prependTo('#vidas').addClass('vida').attr('id','vida_'+i);
-    }
+    varLife(qtdVidas);
     //setando gasolina
     varFuel(40);
     //setando velocidade
@@ -91,6 +92,8 @@ function init(qtdVidas, valorVelocidade){
     $('#planoSuperior').css('width',getDocWidth()+'px');
     //recupera dados dos possíveis obstáculos
     dadosObjetos();
+    //dados dos lifes
+    dadosLifes();
     //dados dos fuels
     dadosFuels();
     //dados das núvens
@@ -123,6 +126,8 @@ function play(){
             timerFuel = setInterval('varFuel(-1)', (velocidade*4));
             //cria linha obstaculos
             timerCriaObstaculos = setInterval('criaLinhaObstaculos(1)', (velocidade*6));
+            //cria linha lifes
+            timerCriaLifes = setInterval('criaLifes()', (velocidade*30));
             //cria linha fuels
             timerCriaFuels = setInterval('criaFuels()', (velocidade*12));
             //rolagem obstaculos
@@ -146,6 +151,7 @@ function pause(){
         clearInterval(timerCash);
         clearInterval(timerFuel);
         clearInterval(timerCriaObstaculos);
+        clearInterval(timerCriaLifes);
         clearInterval(timerCriaFuels);
         clearInterval(timerRolaObstaculos);
         clearInterval(timerRolaNuvens);
@@ -199,6 +205,16 @@ function dadosObjetos(){
         var tamanhoObject = $(this).children('img').css('width').replace('px','');
         objects[numObjects] = tamanhoObject;
         numObjects++; 
+    });
+}
+
+//dados sobre lifes
+function dadosLifes(){
+    var numLifes = 0;
+    $('#objects_other').children('.life').each(function(i){
+        var tamanhoLife = $(this).children('img').css('width').replace('px','');
+        lifes[numLifes] = tamanhoLife;
+        numLifes++; 
     });
 }
 
@@ -422,6 +438,19 @@ function frente(){
     }
 }
 
+function efeitosAirplane(){
+    if(vidas <= 3) {
+        $('#airplaneContent #airplaneSmoke').css("display","block");
+    } else {
+        $('#airplaneContent #airplaneSmoke').css("display","none");
+    }
+    if(vidas <= 2) {
+        $('#airplaneContent #airplaneFire').css("display","block");
+    } else {
+        $('#airplaneContent #airplaneFire').css("display","none");
+    }
+}
+
 //function posicaoAbsolutaAirplane(direcao){
 //    if(direcao == esquerda) {
 //        air_x1 = air_x1-movimentacao;
@@ -492,6 +521,38 @@ function indexObstaculoAleatorio(tamanhoMaximo){
 }
 
 //criando fuel
+function criaLifes(){
+    
+    //cria elemento linha
+    var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha').css('margin-bottom','300px');
+    
+    //elementos
+    var tamMax = palcoWidth;
+    indexLife = indexLifeAleatorio(tamMax);
+
+    var inicioAletorio = Math.floor((Math.random()*tamMax));
+    tamMax = tamMax-inicioAletorio-lifes[indexLife];
+    if(tamMax >= 0) {
+        $('#life'+indexLife).clone().appendTo(novaLinha).css('margin-left',(inicioAletorio-lifes[indexLife]));
+    }
+    
+}
+
+//escolhe elemento aleatorio com tamanho máximo
+function indexLifeAleatorio(tamanhoMaximo){
+    var numObjects = 0;
+    $.each(lifes, function( index, value ){
+        if(parseFloat(value) <= parseFloat(tamanhoMaximo)) {
+            lifesMaximos[numObjects] = index;
+            numObjects++;
+        }
+    });
+    var quantidadeLifes = lifesMaximos.length;
+    var elementoAleatorio = Math.floor((Math.random()*quantidadeLifes));
+    return lifesMaximos[elementoAleatorio];
+}
+
+//criando fuel
 function criaFuels(){
     
     //cria elemento linha
@@ -506,8 +567,6 @@ function criaFuels(){
     if(tamMax >= 0) {
         $('#fuel'+indexFuel).clone().appendTo(novaLinha).css('margin-left',(inicioAletorio-fuels[indexFuel]));
     }
-    
-    $('#fuels').children('<div>:last').remove();
     
 }
 
@@ -631,28 +690,22 @@ function colidiu(elemento){
         
         //se for objeto comum
         if(elemento.attr('class') == "object") {
-            colisoes++;
             elemento.addClass('crash');         
-            $('#vida_'+colisoes).addClass('off');
-            pontuacao(-20); 
-
-            if(colisoes >= vidas) {
-                gameOver(true);
-            } else {        
-                //pisca com jquery-ui
-                $("#airplaneContent").effect('pulsate', {}, 500);
-
-                if(vidas-colisoes <= 3) {
-                    $('#airplaneContent #airplaneSmoke').css("display","block");
-                } else {
-                    $('#airplaneContent #airplaneSmoke').css("display","none");
-                }
-                if(vidas-colisoes <= 2) {
-                    $('#airplaneContent #airplaneFire').css("display","block");
-                } else {
-                    $('#airplaneContent #airplaneFire').css("display","none");
-                }
-            }  
+            varLife(-1);
+            pontuacao(-20);
+            
+            //pisca com jquery-ui
+            $("#airplaneContent").effect('pulsate', {}, 500);
+            efeitosAirplane();
+            return;
+        }
+        
+        //se for life
+        if(elemento.attr('class') == "object life") {
+            varLife(1);
+            pontuacao(10);
+            elemento.addClass('crash');
+            return;
         }
         
         //se for combustível
@@ -660,6 +713,7 @@ function colidiu(elemento){
             varFuel(10);
             pontuacao(10);
             elemento.addClass('crash');
+            return;
         }
         
     }      
@@ -701,6 +755,21 @@ function varCash(valor){
 
 function exibeCash(){
     $('#cash').html("$ "+cash+",00");
+}
+
+function varLife(valor){
+    vidas = vidas + valor;
+    if(vidas < 1) {
+        gameOver(true);
+    }
+    if(vidas > 8) {
+        vidas = 8;
+    }
+    efeitosAirplane();
+    $('#vidas').empty();
+    for(var i=1;i<=vidas;i++){
+        $('<div>').prependTo('#vidas').addClass('vida').attr('id','vida_'+i);
+    }    
 }
 
 function varFuel(valor){
