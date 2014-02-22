@@ -127,13 +127,6 @@ html, body {
 #palco #obstaculos .linha {
     width: 100%;
     float: left;
-    margin-bottom: 550px;
-}
-
-#palco #obstaculos .fuel {
-    width: 100%;
-    float: left;
-    margin-bottom: 50px;
 }
 
 #palco #obstaculos .linha .object, #palco #obstaculos .linha .crash {
@@ -194,11 +187,11 @@ html, body {
 #airplaneContent {
     position: absolute;
     width: auto;
-    height: 150px;
+    height: 148px;
     display: block;
     bottom: 5px;
     left: 50%;
-    /*margin-left: -75px;*/
+    /*margin-left: -74px;*/
     z-index: 9;
     transition: transform 2s linear;
     transition: -ms-transform 2s linear;
@@ -225,7 +218,7 @@ html, body {
 
 #airplaneContent #airplane {
     position: absolute;
-    height: 150px;
+    height: 148px;
     display: block;
     background-image: url('../images/airplanes/airplane-p40.png');
     background-repeat: no-repeat;
@@ -233,23 +226,23 @@ html, body {
 }
 
 #airplaneContent.desligado #airplane, #airplaneContent.frente #airplane {
-    width: 150px;
+    width: 171px;
     background-position: 0px 0px;
 }
 
 #airplaneContent.esquerda #airplane {
-   width: 117px;
-   background-position: -267px 0px; 
+   width: 146px;
+   background-position: -316px 0px; 
 }
 
 #airplaneContent.direita #airplane {
-    width: 117px;
-    background-position: -150px 0px;
+    width: 146px;
+    background-position: -170px 0px;
 }
 
 #airplaneContent.explosion #airplane {
-    width: 150px;
-    background-position: 0px -150px;
+    width: 171px;
+    background-position: 0px -148px;
 }
 
 #airplaneContent #airplanePropeller {
@@ -262,28 +255,28 @@ html, body {
 }
 
 #airplaneContent.desligado #airplanePropeller {
-    width: 150px;
+    width: 171px;
     background-position: 0px 0px;
 }
 
 #airplaneContent.frente #airplanePropeller {
-    width: 150px;
-    background-position: -149px 0px;
+    width: 171px;
+    background-position: -171px 0px;
 }
 
 #airplaneContent.esquerda #airplanePropeller {
-   width: 117px;
-   background-position: -416px 0px;
+   width: 146px;
+   background-position: -356px 0px;
 }
 
 #airplaneContent.direita #airplanePropeller {
-   width: 117px;
-   background-position: -299px 0px;
+   width: 146px;
+   background-position: -341px 0px;
 }
 
 #airplaneContent #airplaneFire {
     position: absolute;
-    height: 150px;
+    height: 148px;
     display: block;
     background-image: url('../images/airplanes/airplane-p40-fire.gif');
     background-repeat: no-repeat;
@@ -293,11 +286,11 @@ html, body {
 }
 
 #airplaneContent #airplaneFire, #airplaneContent.frente #airplaneFire {
-    width: 150px;
+    width: 171px;
 }
 
 #airplaneContent.esquerda #airplaneFire, #airplaneContent.direita #airplaneFire {
-   width: 117px; 
+   width: 146px; 
 }
 
 #airplaneContent #airplaneSmoke {
@@ -307,23 +300,23 @@ html, body {
     display: block;
     background-image: url('../images/airplanes/airplane-p40-smoke.gif');
     background-repeat: no-repeat;
-    z-index: 11;
+    z-index: 7;
     display: none;
 }
 
 #airplaneContent.frente #airplaneSmoke {
-    width: 150px;
+    width: 171px;
     background-position: 0px 0px;
 }
 
 #airplaneContent.esquerda #airplaneSmoke {
-   width: 117px;
-   background-position: -267px 0px;
+   width: 146px;
+   background-position: -187px 0px;
 }
 
 #airplaneContent.direita #airplaneSmoke {
-   width: 117px;
-   background-position: -150px 0px;
+   width: 146px;
+   background-position: -175px 0px;
 }
 
 #palco .pontoNegativo {

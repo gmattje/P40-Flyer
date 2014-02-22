@@ -448,7 +448,7 @@ function criaLinhaObstaculos(quantidade){
     for(var i=0; i<quantidade; i++) {
     
         //cria elemento linha
-        var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha');
+        var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha').css('margin-bottom','550px');;
 
         //elementos
         var primeiroElemento = true;
@@ -495,7 +495,7 @@ function indexObstaculoAleatorio(tamanhoMaximo){
 function criaFuels(){
     
     //cria elemento linha
-    var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha');
+    var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha').css('margin-bottom','300px');
     
     //elementos
     var tamMax = palcoWidth;
@@ -504,7 +504,7 @@ function criaFuels(){
     var inicioAletorio = Math.floor((Math.random()*tamMax));
     tamMax = tamMax-inicioAletorio-fuels[indexFuel];
     if(tamMax >= 0) {
-        $('#fuel'+indexFuel).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
+        $('#fuel'+indexFuel).clone().appendTo(novaLinha).css('margin-left',(inicioAletorio-fuels[indexFuel]));
     }
     
     $('#fuels').children('<div>:last').remove();
@@ -658,6 +658,7 @@ function colidiu(elemento){
         //se for combustível
         if(elemento.attr('class') == "object fuel") {
             varFuel(10);
+            pontuacao(10);
             elemento.addClass('crash');
         }
         
@@ -706,6 +707,9 @@ function varFuel(valor){
     fuel = fuel + valor;
     if(fuel < 0) {
         fuel = 0;
+    }
+    if(fuel > 100) {
+        fuel = 100;
     }
     if(fuel == 0) {
         desligaAviao();
