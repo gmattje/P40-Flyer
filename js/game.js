@@ -476,19 +476,15 @@ function posicaoAbsolutaAirplane(){
 
 //criando linhas de obstáculos aleatórios
 function criaLinhaObstaculos(quantidade){       
-    
     //cria quantas linhas foram solicitadas
     for(var i=0; i<quantidade; i++) {
-    
         //cria elemento linha
         var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha').css('margin-bottom','550px');;
-
         //elementos
         var primeiroElemento = true;
         var tamMax = palcoWidth;
         while(tamMax > 0) {
             indexElemento = indexObstaculoAleatorio(tamMax);
-
             if(primeiroElemento == true) {
                 var inicioAletorio = Math.floor((Math.random()*(tamanhoPassagem+parseFloat(tamanhoPassagem*(25/100)))));
                 tamMax = tamMax-inicioAletorio-objects[indexElemento];
@@ -503,9 +499,7 @@ function criaLinhaObstaculos(quantidade){
                 }
             }        
         }
-    
     }
-    
 }
 
 //escolhe elemento aleatorio com tamanho máximo
@@ -524,14 +518,11 @@ function indexObstaculoAleatorio(tamanhoMaximo){
 
 //criando fuel
 function criaLifes(){
-    
     //cria elemento linha
     var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha').css('margin-bottom','300px');
-    
     //elementos
     var tamMax = palcoWidth;
     indexLife = indexLifeAleatorio(tamMax);
-
     var inicioAletorio = Math.floor((Math.random()*tamMax))-lifes[indexLife];
     if(inicioAletorio < 0) {
         inicioAletorio = 0;
@@ -540,7 +531,6 @@ function criaLifes(){
     if(tamMax >= 0) {
         $('#life'+indexLife).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
     }
-    
 }
 
 //escolhe elemento aleatorio com tamanho máximo
@@ -559,14 +549,11 @@ function indexLifeAleatorio(tamanhoMaximo){
 
 //criando fuel
 function criaFuels(){
-    
     //cria elemento linha
     var novaLinha = $('<div>').prependTo('#obstaculos').addClass('linha').css('margin-bottom','300px');
-    
     //elementos
     var tamMax = palcoWidth;
     indexFuel = indexFuelAleatorio(tamMax);
-
     var inicioAletorio = Math.floor((Math.random()*tamMax))-fuels[indexFuel];
     if(inicioAletorio < 0) {
         inicioAletorio = 0;
@@ -575,7 +562,6 @@ function criaFuels(){
     if(tamMax >= 0) {
         $('#fuel'+indexFuel).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
     }
-    
 }
 
 //escolhe elemento aleatorio com tamanho máximo
@@ -594,24 +580,20 @@ function indexFuelAleatorio(tamanhoMaximo){
 
 //rolagem dos obstáculos
 function rolagemObstaculos(){
-    $('#obstaculos').animate({bottom:'-=10%'}, velocidade);
+    $('#obstaculos').animate({bottom:'-=10%'}, velocidade, 'linear');
 }
 
 //criando linhas de nuvens
 function criaLinhaNuvens(quantidade){       
-    
     //cria quantas linhas foram solicitadas
     for(var i=0; i<quantidade; i++) {
-    
         //cria elemento linha
         var novaLinha = $('<div>').prependTo('#nuvens').addClass('linha');
-
         //elementos
         var primeiroElemento = true;
         var tamMax = palcoWidth;
         while(tamMax > 0) {
             indexNuvem = indexNuvemAleatorio(tamMax);
-
             if(primeiroElemento == true) {
                 var inicioAletorio = Math.floor((Math.random()*(tamanhoPassagem+parseFloat(tamanhoPassagem*(25/100)))));
                 tamMax = tamMax-inicioAletorio-clouds[indexNuvem];
@@ -626,9 +608,7 @@ function criaLinhaNuvens(quantidade){
                 }
             }        
         }
-    
     }
-    
 }
 
 //escolhe elemento aleatorio com tamanho máximo
@@ -647,7 +627,7 @@ function indexNuvemAleatorio(tamanhoMaximo){
 
 //rolagem dos obstáculos
 function rolagemNuvens(){
-    $('#nuvens').animate({bottom:'-=15%'}, velocidade);
+    $('#nuvens').animate({bottom:'-=15%'}, velocidade, 'linear');
 }
 
 //limpa objetos já passados
@@ -703,25 +683,24 @@ function controleColisao(){
             }); 
         }
     })
-     
 }
 
 function colidiu(elemento){
     //confere novamente se objato já não tinha sido atingido
     if(elemento.attr('class') != "crash") {
-        
         //se for objeto comum
         if(elemento.attr('class') == "object") {
             elemento.addClass('crash');         
             varLife(-1);
             pontuacao(-20);
-            
-            //pisca com jquery-ui
-            $("#airplaneContent").effect('pulsate', {}, 500);
+            //pisca avião
+            $('#airplaneContent #airplaneImpact').css("display","block");
+            setTimeout(function(){
+                $('#airplaneContent #airplaneImpact').css("display","none");
+            }, 1000);
             efeitosAirplane();
             return;
         }
-        
         //se for life
         if(elemento.attr('class') == "object life") {
             varLife(1);
@@ -729,7 +708,6 @@ function colidiu(elemento){
             elemento.addClass('crash');
             return;
         }
-        
         //se for combustível
         if(elemento.attr('class') == "object fuel") {
             varFuel(10);
@@ -737,7 +715,6 @@ function colidiu(elemento){
             elemento.addClass('crash');
             return;
         }
-        
     }      
 }
 

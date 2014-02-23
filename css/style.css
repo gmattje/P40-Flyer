@@ -240,6 +240,15 @@ html, body {
     background-position: -170px 0px;
 }
 
+#airplaneContent.explosion {
+    transition: transform .3s linear;
+    transition: -ms-transform .3s linear;
+    transition: -webkit-transform .3s linear;
+    transform: scale(1.5); 
+    -ms-transform: scale(1.5);
+    -webkit-transform: scale(1.5);
+}
+
 #airplaneContent.explosion #airplane {
     width: 171px;
     background-position: 0px -148px;
@@ -274,6 +283,35 @@ html, body {
    background-position: -341px 0px;
 }
 
+#airplaneContent #airplaneImpact {
+    position: absolute;
+    top: -8px;
+    left: -4px;
+    height: 161px;
+    display: block;
+    background-image: url('../images/airplanes/airplane-p40-impact.gif');
+    background-repeat: no-repeat;
+    z-index: 7;
+    display: none;
+}
+
+#airplaneContent.desligado #airplaneImpact, #airplaneContent.frente #airplaneImpact {
+    top: -4px;
+    left: -5px;
+    width: 181px;
+    background-position: 0px 0px;
+}
+
+#airplaneContent.esquerda #airplaneImpact {
+    width: 156px;
+    background-position: -337px 0px;
+}
+
+#airplaneContent.direita #airplaneImpact {
+    width: 156px;
+    background-position: -181px 0px;
+}
+
 #airplaneContent #airplaneFire {
     position: absolute;
     height: 148px;
@@ -300,7 +338,7 @@ html, body {
     display: block;
     background-image: url('../images/airplanes/airplane-p40-smoke.gif');
     background-repeat: no-repeat;
-    z-index: 7;
+    z-index: 6;
     display: none;
 }
 
