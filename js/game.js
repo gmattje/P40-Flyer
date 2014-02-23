@@ -136,6 +136,8 @@ function play(){
             timerCriaNuvens = setInterval('criaLinhaNuvens(1)', (velocidade*3));
             //rolagem nuvens
             timerRolaNuvens = setInterval('rolagemNuvens()', velocidade);
+            //limpa palco
+            timerLimpaPalco = setInterval('limpaPalco()', velocidade);
             //controle colisao
             timerControleColisao = setInterval('controleColisao()', velocidade);            
         }, aguardar);       
@@ -154,7 +156,9 @@ function pause(){
         clearInterval(timerCriaLifes);
         clearInterval(timerCriaFuels);
         clearInterval(timerRolaObstaculos);
+        clearInterval(timerCriaNuvens);
         clearInterval(timerRolaNuvens);
+        clearInterval(timerLimpaPalco);
         clearInterval(timerControleColisao);        
     }
 }
@@ -502,8 +506,6 @@ function criaLinhaObstaculos(quantidade){
     
     }
     
-    $('#obstaculos').children('<div>:last').remove();
-    
 }
 
 //escolhe elemento aleatorio com tamanho máximo
@@ -530,10 +532,13 @@ function criaLifes(){
     var tamMax = palcoWidth;
     indexLife = indexLifeAleatorio(tamMax);
 
-    var inicioAletorio = Math.floor((Math.random()*tamMax));
+    var inicioAletorio = Math.floor((Math.random()*tamMax))-lifes[indexLife];
+    if(inicioAletorio < 0) {
+        inicioAletorio = 0;
+    }
     tamMax = tamMax-inicioAletorio-lifes[indexLife];
     if(tamMax >= 0) {
-        $('#life'+indexLife).clone().appendTo(novaLinha).css('margin-left',(inicioAletorio-lifes[indexLife]));
+        $('#life'+indexLife).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
     }
     
 }
@@ -562,10 +567,13 @@ function criaFuels(){
     var tamMax = palcoWidth;
     indexFuel = indexFuelAleatorio(tamMax);
 
-    var inicioAletorio = Math.floor((Math.random()*tamMax));
+    var inicioAletorio = Math.floor((Math.random()*tamMax))-fuels[indexFuel];
+    if(inicioAletorio < 0) {
+        inicioAletorio = 0;
+    }
     tamMax = tamMax-inicioAletorio-fuels[indexFuel];
     if(tamMax >= 0) {
-        $('#fuel'+indexFuel).clone().appendTo(novaLinha).css('margin-left',(inicioAletorio-fuels[indexFuel]));
+        $('#fuel'+indexFuel).clone().appendTo(novaLinha).css('margin-left',inicioAletorio);
     }
     
 }
@@ -621,8 +629,6 @@ function criaLinhaNuvens(quantidade){
     
     }
     
-    $('#nuvens').children('<div>:last').remove();
-    
 }
 
 //escolhe elemento aleatorio com tamanho máximo
@@ -642,6 +648,22 @@ function indexNuvemAleatorio(tamanhoMaximo){
 //rolagem dos obstáculos
 function rolagemNuvens(){
     $('#nuvens').animate({bottom:'-=15%'}, velocidade);
+}
+
+//limpa objetos já passados
+function limpaPalco(){
+    //limpa palco
+    var ultimaLinhaObj = $('#obstaculos').children('div.linha:last');
+    if(ultimaLinhaObj.offset().top > palcoHeight) {
+        var heightUltimaLinhaObj = ultimaLinhaObj.css('height');
+        ultimaLinhaObj.css('height',heightUltimaLinhaObj).empty();
+    }
+    //limpa nuvens
+    var ultimaLinhaNuvem = $('#nuvens').children('div.linha:last');
+    if(ultimaLinhaNuvem.offset().top > palcoHeight) {
+        var heightUltimaLinhaNuvens = ultimaLinhaNuvem.css('height');
+        ultimaLinhaNuvem.css('height',heightUltimaLinhaNuvens).empty();
+    }
 }
 
 function controleColisao(){
