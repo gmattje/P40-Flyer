@@ -793,6 +793,8 @@ function gameOver(explode){
     if(explode == true) {
         explodeAviao();
     }
-    alert('GAME OVER - Você fez '+pontos+' pontos.');
-    restart(false);
+    setTimeout(function(){
+        alert('GAME OVER - Você fez '+pontos+' pontos.');
+        restart(false);
+    }, 300)
 }
